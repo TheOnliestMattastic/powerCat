@@ -17,22 +17,61 @@
 #                       A single‑shot concatenator 
 #          for bundling code and docs into one clean text file. 
 # --------------------------------------------------------------------------
-# Function: Invoke-PowerCat
-# Description: Concatenates files from a source directory into a single output file
-# Parameters:
-#   -s (SourcePath): Path to the source directory
-#   -o (OutputPath): Path to the output file
-#   -r (Recurse): Switch to include subdirectories
-#   -f (Fenced): Switch to wrap code blocks in Markdown fences
-#   -e (Extensions): Comma-separated list of file extensions to include
-#   -b (IncludeBash): Switch to include .sh files
-#   -p (IncludePowerShell): Switch to include .ps1 files
-#   -sort (SortBy): Property to sort files by (Name, Extension, LastWriteTime, Length)
-#
-# Usage:
-# 1. Call the function with required parameters
-# 2. Files matching the criteria will be concatenated
-# --------------------------------------------------------------------------
+<#
+.SYNOPSIS
+Concatenate files from a source directory into a single output file.
+
+.DESCRIPTION
+powerCat is a single-shot concatenator for bundling code and docs into one clean text file.
+Supports recursion, Markdown code fencing, custom extensions, and sorting.
+
+.PARAMETER SourceDir
+Path to the directory containing files.
+
+.PARAMETER OutputFile
+Path to the output text file.
+
+.PARAMETER Recurse
+Include subdirectories.
+
+.PARAMETER Fence
+Wrap file contents in Markdown code fences (```).
+
+.PARAMETER Extensions
+Specify extensions to include (default: .lua, .md).
+Example: -e ".ps1",".json",".sh"
+
+.PARAMETER Bash
+Include .sh files.
+
+.PARAMETER HTML
+Include .html files.
+
+.PARAMETER CSS
+Include .css files.
+
+.PARAMETER PowerShell
+Include .ps1 files.
+
+.PARAMETER Sort
+Property to sort files by (Name, Extension, LastWriteTime, Length).
+
+.EXAMPLE
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
+Concatenates .lua and .md files from C:\Project into bundle.txt.
+
+.EXAMPLE
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -r -f
+Recursively concatenates files and wraps them in Markdown fences.
+
+.EXAMPLE
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -b -p -sort Extension
+Includes Bash and PowerShell files, sorted by extension.
+
+.NOTES
+Author: Matthew Poole Chicano
+License: CC0-1.0
+#>
 function Invoke-PowerCat {
     [CmdletBinding()]
     param (

@@ -36,7 +36,7 @@
     VariablesToExport = '*'
 
     # Aliases to export from this module
-    AliasesToExport   = '*'
+    AliasesToExport   = @('powerCat','pcat','concat')
 
     # Private data to pass to the module
     PrivateData       = @{

@@ -182,3 +182,7 @@ function Invoke-PowerCat {
 
     Write-Host "Concatenation complete. Output saved to $OutputFile"
 }
+# --- Aliases ---
+Set-Alias -Name powerCat -Value Invoke-PowerCat
+Set-Alias -Name pcat -Value Invoke-PowerCat
+Set-Alias -Name concat -Value Invoke-PowerCat

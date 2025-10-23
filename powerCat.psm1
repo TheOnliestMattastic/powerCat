@@ -14,14 +14,24 @@
 #                                presents,
 #
 #                                powerCat:
-#                       A single-shot concatenator 
-#                       for bundling code and docs
+#                       A single‑shot concatenator 
+#          for bundling code and docs into one clean text file. 
 # --------------------------------------------------------------------------
-# How to use this script:
-# 1. Run with required parameters: -SourceDir and -OutputFile
-#    Example: .\powerCat.ps1 -s "C:\pat\to\dir" -o "C:\path\to\file.txt"
-# 2. (Optional) Add switches like -r (recursive), -ht (html), or -e (extensions)
-# 3. Output will contain all matching files concatenated into one text file
+# Function: Invoke-PowerCat
+# Description: Concatenates files from a source directory into a single output file
+# Parameters:
+#   -s (SourcePath): Path to the source directory
+#   -o (OutputPath): Path to the output file
+#   -r (Recurse): Switch to include subdirectories
+#   -f (Fenced): Switch to wrap code blocks in Markdown fences
+#   -e (Extensions): Comma-separated list of file extensions to include
+#   -b (IncludeBash): Switch to include .sh files
+#   -p (IncludePowerShell): Switch to include .ps1 files
+#   -sort (SortBy): Property to sort files by (Name, Extension, LastWriteTime, Length)
+#
+# Usage:
+# 1. Call the function with required parameters
+# 2. Files matching the criteria will be concatenated
 # --------------------------------------------------------------------------
 function Invoke-PowerCat {
     [CmdletBinding()]

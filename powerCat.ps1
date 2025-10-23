@@ -83,7 +83,7 @@ param (
     [Alias("fen")]
     [switch]$Fence,
 
-    [Alias("sort")]
+    [Alias("st")]
     [ValidateSet("Name", "Extension", "LastWriteTime", "Length")]
     [string]$Sort = "Name"
 )

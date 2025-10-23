@@ -36,20 +36,20 @@
 function Invoke-PowerCat {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Run")]
         [Alias("s")]
         [Alias("source")]
         [Alias("dir")]
         [string]$SourceDir,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = "Run")]
         [Alias("o")]
         [Alias("out")]
         [Alias("output")]
         [Alias("file")]
         [string]$OutputFile,
 
-        [Alias("h")]
+        [Alias("h", ParameterSetName = "Help")]
         [switch]$Help,
 
         [Alias("r")]

@@ -148,6 +148,7 @@ function Invoke-PowerCat {
     if ($CSS)           { $Extensions += ".css" }
     if ($Powershell)    { $Extensions += ".ps1" }
     if ($Lua)           { $Extensions += ".lua"}
+    $Extensions = $Extensions | Select-Object -Unique
 
     # man-page
     if ($Help) {
@@ -188,6 +189,9 @@ function Invoke-PowerCat {
         return
     }
 
+    # Validate SourceDir
+    if(-not(Test-Path -Path $SourceDir)){Write-Error "SourceDir '$SourceDir` not found."}
+
     # Get all files in the directory 
     $Files = foreach ($ext in $Extensions) {
         if ($Recurse) {
@@ -198,8 +202,11 @@ function Invoke-PowerCat {
     }
 
     if ($Files.Count -eq 0) {
-        Write-Host "No matching files found in $SourceDir"
+        Write-Output "No matching files found in $SourceDir"
         return
+    } 
+    else {
+        $Files = $Files | Select-Object -Unique
     }
 
     switch ($Sort) {
@@ -239,3 +246,4 @@ function Invoke-PowerCat {
 Set-Alias -Name powerCat -Value Invoke-PowerCat
 Set-Alias -Name pcat -Value Invoke-PowerCat
 Set-Alias -Name concat -Value Invoke-PowerCat
+Export-ModuleMember -Function Invoke-PowerCat -Alias powerCat,pcat,concat

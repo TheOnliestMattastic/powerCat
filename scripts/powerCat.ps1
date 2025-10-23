@@ -197,7 +197,7 @@ $Files = foreach ($ext in $Extensions) {
 }
 
 if ($Files.Count -eq 0) {
-    Write-Host "No matching files found in $SourceDir"
+    Write-Output "No matching files found in $SourceDir"
     return
 }
 

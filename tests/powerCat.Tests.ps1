@@ -1,5 +1,5 @@
 # Requires -Version 5.0
-Import-Module "$PSScriptRoot\..\src\powerCat.psd1" -Force
+Import-Module "$PSScriptRoot\..\src\powerCat\powerCat.psd1" -Force
 
 Describe "powerCat Module" {
 

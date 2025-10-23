@@ -9,7 +9,7 @@
     CompatiblePSEditions = @('Desktop','Core')
 
     # ID used to uniquely identify this module
-    GUID              = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'  # Use New-Guid
+    GUID              = '4393a30b-14ea-4597-bfd3-dcabd3f3acc9'  # Use New-Guid
 
     # Author of this module
     Author            = 'Matthew Poole'

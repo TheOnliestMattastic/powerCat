@@ -24,6 +24,7 @@
 # 3. Output will contain all matching files concatenated into one text file
 # --------------------------------------------------------------------------
 function Invoke-PowerCat {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
         [Alias("s")]

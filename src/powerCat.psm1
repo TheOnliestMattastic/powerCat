@@ -71,6 +71,12 @@ Includes Bash and PowerShell files, sorted by extension.
 .NOTES
 Author: Matthew Poole Chicano
 License: CC0-1.0
+
+.LINK
+https://github.com/TheOnliestMattastic/powerCat
+
+.LINK
+https://theonliestmattastic.github.io/
 #>
 function Invoke-PowerCat {
     [CmdletBinding()]

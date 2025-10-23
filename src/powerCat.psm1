@@ -87,6 +87,7 @@ function Invoke-PowerCat {
         [Parameter(Mandatory = $true, ParameterSetName = "Run")]
         [Alias("s")]
         [Alias("source")]
+        [Alias("src")]
         [Alias("dir")]
         [string]$SourceDir,
 

@@ -75,7 +75,7 @@ function Invoke-PowerCat {
         [switch]$Fence,
 
         [Alias("sort")]
-        [ValidateSet("Name", "Extension", "LasWriteTime", "Length")]
+        [ValidateSet("Name", "Extension", "LastWriteTime", "Length")]
         [string]$Sort = "Name"
     )
 

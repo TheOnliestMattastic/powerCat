@@ -38,7 +38,7 @@ Include subdirectories.
 Wrap file contents in Markdown code fences (```).
 
 .PARAMETER Extensions
-Specify extensions to include (default: .lua, .md).
+Specify extensions to include (default: .md).
 Example: -e ".ps1",".json",".sh"
 
 .PARAMETER Bash
@@ -46,6 +46,9 @@ Include .sh files.
 
 .PARAMETER HTML
 Include .html files.
+
+.PARAMETER Lua
+Include .Lua files.
 
 .PARAMETER CSS
 Include .css files.
@@ -58,11 +61,11 @@ Property to sort files by (Name, Extension, LastWriteTime, Length).
 
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
-Concatenates .lua and .md files from C:\Project into bundle.txt.
+Concatenates .md files from C:\Project into bundle.txt.
 
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -r -f
-Recursively concatenates files and wraps them in Markdown fences.
+Recursively concatenates .md files and wraps them in Markdown fences.
 
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -b -p -sort Extension
@@ -103,9 +106,9 @@ function Invoke-PowerCat {
         [Alias("recursive")]
         [switch]$Recurse,
 
-        [Alias("m")]
-        [Alias("md")]
-        [switch]$Markdown,
+        [Alias("l")]
+        [Alias("lu")]
+        [switch]$Lua,
 
         [Alias("b")]
         [Alias("sh")]
@@ -127,7 +130,7 @@ function Invoke-PowerCat {
         [Alias("e")]
         [Alias("ex")]
         [Alias("ext")]
-        [string[]]$Extensions = @(".lua", ".md"), # default
+        [string[]]$Extensions = @(".md"), # default
 
         [Alias("f")]
         [Alias("fen")]
@@ -142,12 +145,13 @@ function Invoke-PowerCat {
     if ($Bash)          { $Extensions += ".sh" }
     if ($HTML)          { $Extensions += ".html" }
     if ($CSS)           { $Extensions += ".css" }
-    if ($Powershell)    { $Extensions += ".css" }
+    if ($Powershell)    { $Extensions += ".ps1" }
+    if ($Lua)           { $Extensions += ".lua"}
 
     # man-page
     if ($Help) {
         Write-Output @"
-    powerCat.ps1 — A single-shot concatenator for bundling code and docs
+    powerCat.ps1 — A single-shot concatenator for bundling markdown and code
 
     USAGE:
         .\powerCat.ps1 -s   <SourceDir> -o <OutputFile> [options]
@@ -165,14 +169,14 @@ function Invoke-PowerCat {
         -b, -Bash           Include .sh files
         -c, -CSS            Include .css files
         -ht, -HTML          Include .html files
-        -m, -Markdown       Include .md files
+        -l, -Lua            Include .lua files
         -p, -PowerShell     Include .ps1 files
 
         -h, -Help           Show this help message
 
     EXAMPLES:
         .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
-        .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -m
+        .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -l
         .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -e ".ps1",".json"
 
     DESCRIPTION:

@@ -198,7 +198,7 @@ $Files = foreach ($ext in $Extensions) {
 
 if ($Files.Count -eq 0) {
     Write-Host "No matching files found in $SourceDir"
-    exit
+    return
 }
 
 switch ($Sort) {

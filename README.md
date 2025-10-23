@@ -111,6 +111,7 @@ Script usage:
 ```powershell
 .\scripts\powerCat.ps1 -s . -o out.txt
 ```
+_Note:_ If you see scripts blocked, run `Set-ExcecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
 
 ## ☄️ Why powerCat?
 

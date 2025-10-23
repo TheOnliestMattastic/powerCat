@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*'   
   pull_request:
     branches: [ "main" ]
 
@@ -14,13 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup PowerShell
-        uses: actions/setup-powershell@v2
-
       - name: Install Pester
+        shell: pwsh
         run: Install-Module Pester -Force -Scope CurrentUser
 
       - name: Run Pester tests
+        shell: pwsh
         run: Invoke-Pester -Path tests -Output Detailed
 
   publish:
@@ -30,11 +29,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup PowerShell
-        uses: actions/setup-powershell@v2
-
       - name: Publish to PSGallery
+        shell: pwsh
         run: |
-          Publish-Module -Path .\src\powerCat -NuGetApiKey $env:PSGALLERY_KEY -Verbose
+          Publish-Module -Path .\ -NuGetApiKey $env:PSGALLERY_KEY -Verbose
         env:
           PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}

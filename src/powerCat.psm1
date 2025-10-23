@@ -190,7 +190,7 @@ function Invoke-PowerCat {
     }
 
     # Validate SourceDir
-    if(-not(Test-Path -Path $SourceDir)){Write-Error "SourceDir '$SourceDir` not found."}
+    if(-not(Test-Path -Path $SourceDir)){Write-Error "SourceDir '$SourceDir' not found."}
 
     # Get all files in the directory 
     $Files = foreach ($ext in $Extensions) {

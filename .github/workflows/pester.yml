@@ -32,6 +32,6 @@ jobs:
       - name: Publish to PSGallery
         shell: pwsh
         run: |
-          Publish-Module -Path .\ -NuGetApiKey $env:PSGALLERY_KEY -Verbose
+          Publish-Module -Path .\src\powerCat -NuGetApiKey $env:PSGALLERY_KEY -Verbose
         env:
           PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}

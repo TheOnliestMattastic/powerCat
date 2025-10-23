@@ -47,7 +47,8 @@ param (
     [Alias("file")]
     [string]$OutputFile,
 
-    [Alias("h", ParameterSetName = "Help")]
+    [Parameter(ParameterSetName = "Help")]
+    [Alias("h")]
     [switch]$Help,
 
     [Alias("r")]
@@ -77,6 +78,8 @@ param (
     [switch]$Powershell,
 
     [Alias("e")]
+    [Alias("ex")]
+    [Alias("ext")]
     [string[]]$Extensions = @(".lua", ".md"), # default
 
     [Alias("f")]

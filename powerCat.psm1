@@ -67,7 +67,7 @@ param (
     [switch]$Powershell,
 
     [Alias("e")]
-    [string[]]$Extensions = @(".lua"), # default
+    [string[]]$Extensions = @(".lua", ".md"), # default
 
     [Alias("f")]
     [Alias("fen")]
@@ -83,7 +83,6 @@ if ($Bash)          { $Extensions += ".sh" }
 if ($HTML)          { $Extensions += ".html" }
 if ($CSS)           { $Extensions += ".css" }
 if ($Powershell)    { $Extensions += ".css" }
-if ($Markdown)      { $Extensions += ".md" }
 
 # man-page
 if ($Help) {

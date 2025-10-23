@@ -10,9 +10,11 @@ on:
 
 jobs:
   test:
+    name: Run Pester Tests
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
       - name: Install Pester
         shell: pwsh
@@ -20,18 +22,25 @@ jobs:
 
       - name: Run Pester tests
         shell: pwsh
-        run: Invoke-Pester -Path tests -Output Detailed
+        run: |
+          Import-Module -Name Pester -Force  
+          Invoke-Pester -Path tests -Output Detailed
 
   publish:
+    name: Publish to PSGallery
     needs: test
     runs-on: windows-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-      - name: Publish to PSGallery
+      - name: Validate module manifest
         shell: pwsh
-        run: |
-          Publish-Module -Path .\src\powerCat -NuGetApiKey $env:PSGALLERY_KEY -Verbose
+        run: Test-ModuleManifest -Path .\src\powerCat\powerCat.psd1
+
+      - name: Publish module to PSGallery
+        shell: pwsh
+        run: Publish-Module -Path .\src\powerCat -NuGetApiKey $env:PSGALLERY_KEY -Verbose
         env:
           PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}

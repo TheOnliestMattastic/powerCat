@@ -44,7 +44,7 @@
         PSData = @{
 
             # Tags applied to this module for discovery
-            Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'Textfile', 'Documentation')
+            Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'Textfile', 'Documentation', "LLM")
 
             # A URL to the license for this module
             LicenseUri = 'https://creativecommons.org/publicdomain/zero/1.0/'

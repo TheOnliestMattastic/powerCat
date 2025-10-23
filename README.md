@@ -21,12 +21,14 @@ ___________.__             ________         .__  .__                 __
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)  
 
 ## 🔭 Overview
+
 **powerCat** is a single‑shot concatenator for bundling code and docs into one clean text file.  
 Think of it as the feline cousin of `cat`—but with PowerShell polish, and Markdown‑aware formatting.
 
 ---
 
 ## ✨ Features
+
 - Concatenate multiple file types into one output file
 - Supports recursion into subdirectories (`-r`)
 - Optional Markdown code fencing (`-f`) for LLMs, GitHub, or recruiters
@@ -37,31 +39,47 @@ Think of it as the feline cousin of `cat`—but with PowerShell polish, and Mark
 ## 🗺️ Usage
 
 ### Install from PowerShell Gallery
+
 ```powershell
 Install-Module -Name powerCat -Scope CurrentUser
 Import-Module powerCat
 ```
 
+### Import as a Module
+
+```powershell
+Import-Module .\src\powerCat.psd1 -Force
+Invoke-PowerCat -s "C:\path\to\dir" -o "C:\path\to\file.txt"
+```
+
 ### Run as a Script
+
 ```powershell
 .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
 ```
 
 ### Examples
+
 - Concatenate `.lua` and `.md` files:
+
   ```powershell
   .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
   ```
+
 - Include subdirectories and wrap in Markdown:
+
   ```powershell
   .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -f
   ```
+
 - Add Bash and PowerShell files, sorted by extension:
+
   ```powershell
   .\powerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -b -p -sort Extension
   ```
 
 ## 🚀 Why?
+
 Because recruiters, collaborators, and LLMs don’t want a folder tree—they want one file.  
 **powerCat** makes it painless to share your work in a way that’s readable, portable, and a little bit stylish.
 

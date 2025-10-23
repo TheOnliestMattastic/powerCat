@@ -15,14 +15,14 @@
 #
 #                                powerCat:
 #                       A single‑shot concatenator 
-#          for bundling code and docs into one clean text file. 
+#        for bundling markdown and code into one clean text file. 
 # --------------------------------------------------------------------------
 <#
 .SYNOPSIS
 Concatenate files from a source directory into a single output file.
 
 .DESCRIPTION
-powerCat is a single-shot concatenator for bundling code and docs into one clean text file.
+powerCat is a single-shot concatenator for bundling markdown and code into one clean text file.
 Supports recursion, Markdown code fencing, custom extensions, and sorting.
 
 .PARAMETER SourceDir

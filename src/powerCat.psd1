@@ -3,7 +3,7 @@
     RootModule        = 'powerCat.psm1'
 
     # Version number of this module
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '1.0.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop','Core')
@@ -12,7 +12,7 @@
     GUID              = '4393a30b-14ea-4597-bfd3-dcabd3f3acc9'  # Use New-Guid
 
     # Author of this module
-    Author            = 'Matthew Poole'
+    Author            = 'Matthew Poole Chicano'
 
     # Company or vendor of this module
     CompanyName       = 'Independent Developer'
@@ -44,7 +44,7 @@
         PSData = @{
 
             # Tags applied to this module for discovery
-            Tags = @('Concatenate','Utility','Markdown','DevTools')
+            Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'textfile', 'documentation')
 
             # A URL to the license for this module
             LicenseUri = 'https://creativecommons.org/publicdomain/zero/1.0/'

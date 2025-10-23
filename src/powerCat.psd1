@@ -21,7 +21,7 @@
     Copyright         = '(c) 2025 Matthew Poole Chicano. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'powerCat is a single-shot concatenator that bundles code and documentation files into one text file. Supports recursion, Markdown formatting, custom extensions, and sorting.'
+    Description       = 'powerCat is a single-shot concatenator that bundles markdown and code files into one text file. Supports recursion, Markdown formatting, custom extensions, and sorting.'
 
     # Minimum version of the PowerShell engine required
     PowerShellVersion = '5.1'
@@ -44,7 +44,7 @@
         PSData = @{
 
             # Tags applied to this module for discovery
-            Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'textfile', 'documentation')
+            Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'Textfile', 'Documentation')
 
             # A URL to the license for this module
             LicenseUri = 'https://creativecommons.org/publicdomain/zero/1.0/'

@@ -146,7 +146,7 @@ function Invoke-PowerCat {
 
     # man-page
     if ($Help) {
-        Write-Host @"
+        Write-Output @"
     powerCat.ps1 — A single-shot concatenator for bundling code and docs
 
     USAGE:
@@ -180,7 +180,7 @@ function Invoke-PowerCat {
         single text file. Useful for sharing code with LLMs, recruiters,
         or collaborators. Supports Markdown formatting for readability.
 "@
-        exit
+        return
     }
 
     # Get all files in the directory 

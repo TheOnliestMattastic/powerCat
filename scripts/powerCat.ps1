@@ -163,7 +163,7 @@ REQUIRED PARAMETERS:
 OPTIONS:
     -r, -Recurse        Include subdirectories
     -f, -Fence          Wrap file contents in Markdown code fences (i.e., '```')
-    -e, -Extensions     Specify extensions (default: .lua, .md)
+    -e, -Extensions     Specify extensions (default: .md)
                         Example: -e ".ps1",".json",".sh"
 
     -b, -Bash           Include .sh files

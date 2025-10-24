@@ -71,27 +71,27 @@ Invoke-PowerCat -Help
 
 - **Concatenate `.md` files (default):**
 
-  ```powershell
-  Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
-  ```
+```powershell
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
+```
 
 - **Recurse and wrap each file in fenced blocks:**
 
-  ```powershell
-  Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -Fence
-  ```
+```powershell
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -Fence
+```
 
 - **Add Bash and PowerShell files, sorted by extension:**
 
-  ```powershell
-  Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Bash -PowerShell -Sort Extension
-  ```
+```powershell
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Bash -PowerShell -Sort Extension
+```
 
 - **Custom extensions:**
 
-  ```powershell
-  Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh"
-  ```
+```powershell
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh"
+```
 
 ## 🗺️ Repo structure
 

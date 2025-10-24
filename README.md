@@ -28,7 +28,7 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 
 ## ✨ Features
 
-- **Concatenation:** Bundle multiple file types into a single output file.
+- **Concatenation:** Bundle multiple filetypes into a single output file.
 - **Recursion:** Include subdirectories with `-Recurse`.
 - **Markdown fences:** Opt‑in code fencing with `-Fence` for clean LLM/GitHub sharing.
 - **Extensions:** Default as Markdown plus switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`) or custom list via `-Extensions`.

@@ -17,7 +17,7 @@ ___________.__             ________         .__  .__                 __
 
 [![PowerCat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/powerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/powerCat/actions/workflows/pester.yml)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/powerCat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/powerCat)
-[![License](https://img.shields.io/badge/License-CC0--1.0-bd93f9?style=for-the-badge&logo=creativecommons&logoColor=white&labelColor=6272a4)](https://creativecommons.org/publicdomain/zero/1.0/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-bd93f9?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.gnu.org/licenses/gpl-3.0)
 [![Portfolio](https://img.shields.io/badge/Portfolio-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)](https://theonliestmattastic.github.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)
 
@@ -122,7 +122,7 @@ powerCat makes your work readable, portable, and a little stylish.
 
 ## 🛸 License
 
-This project is licensed under the [CC0‑1.0 Universal License](https://creativecommons.org/publicdomain/zero/1.0/).
+This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0).
 
 ## 🪐 Recruiter’s note
 

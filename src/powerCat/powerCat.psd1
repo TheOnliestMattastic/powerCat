@@ -3,7 +3,7 @@
     RootModule        = 'powerCat.psm1'
 
     # Version number of this module
-    ModuleVersion     = '1.0.5'
+    ModuleVersion     = '1.0.6'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop','Core')
@@ -47,7 +47,7 @@
             Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'Textfile', 'Documentation', "LLM")
 
             # A URL to the license for this module
-            LicenseUri = 'https://creativecommons.org/publicdomain/zero/1.0/'
+            LicenseUri = 'https://www.gnu.org/licenses/gpl-3.0'
 
             # A URL to the main website for this project
             ProjectUri = 'https://github.com/TheOnliestMattastic/powerCat'

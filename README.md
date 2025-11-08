@@ -1,29 +1,29 @@
-# 🐱 powerCat
+# 🐱 PowerCat
 
 ```txt
-___________.__             ________         .__  .__                 __   
-\__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
-  |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
-  |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
-  |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
-                \/     \/          \/     \/             \/     \/        
-   _____          __    __                   __  .__                      
-  /     \ _____ _/  |__/  |______    _______/  |_|__| ____                
- /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\               
-/    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___               
-\____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  >              
-        \/     \/                \/     \/               \/               
+ ___________.__             ________         .__  .__                 __   
+ \__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
+   |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
+   |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
+   |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
+                 \/     \/          \/     \/             \/     \/        
+ /\        _____          __    __                   __  .__             /\
+ \ \      /     \ _____ _/  |__/  |______    _______/  |_|__| ____      / /
+  \ \    /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\    / / 
+   \ \  /    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___   / /  
+    \ \ \____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  > / /   
+     \/         \/     \/                \/     \/               \/  \/    
 ```
 
-[![PowerCat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/powerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/powerCat/actions/workflows/pester.yml)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/powerCat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/powerCat)
+[![PowerCat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/PowerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/PowerCat/actions/workflows/pester.yml)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PowerCat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/PowerCat)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-bd93f9?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.gnu.org/licenses/gpl-3.0)
 [![Portfolio](https://img.shields.io/badge/Portfolio-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)](https://theonliestmattastic.github.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)
 
 ## 🔭 Overview
 
-**powerCat** is a single‑shot concatenator for bundling markdown and code into one clean text file.  
+**PowerCat** is a single‑shot concatenator for bundling markdown and code into one clean text file.  
 It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, and built with recruiter‑friendly ergonomics.
 
 ## ✨ Features
@@ -33,7 +33,7 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - **Markdown fences:** Opt‑in code fencing with `-Fence` for clean LLM/GitHub sharing.
 - **Extensions:** Default as Markdown plus switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`) or custom list via `-Extensions`.
 - **Sorting:** Control order with `-Sort Name|Extension|LastWriteTime|Length`.
-- **Aliases:** Quick commands `powerCat`, `pcat`, `concat` point to `Invoke-PowerCat`.
+- **Aliases:** Quick commands `PowerCat`, `pcat`, `concat` point to `Invoke-PowerCat`.
 - **Native help:** Rich comment‑based help available via `Get-Help Invoke-PowerCat`.
 
 ## 🚀 Blasting Off
@@ -41,8 +41,8 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 ### Install from PowerShell Gallery
 
 ```powershell
-Install-Module -Name powerCat -Scope CurrentUser
-Import-Module powerCat
+Install-Module -Name PowerCat -Scope CurrentUser
+Import-Module PowerCat
 ```
 
 ### Run as a cmdlet
@@ -54,7 +54,7 @@ Invoke-PowerCat -SourceDir "C:\Project" -OutputFile "C:\bundle.txt"
 ### Aliases
 
 ```powershell
-powerCat -s . -o out.txt
+PowerCat -s . -o out.txt
 pcat -s . -o out.txt -r -f
 concat -s . -o out.txt -b -p -Sort Extension
 ```
@@ -97,28 +97,28 @@ Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".
 
 This repo ships both a module and a standalone script for convenience:
 
-- **Module:** `src/powerCat.psm1`, `src/powerCat.psd1`
-- **Script:** `scripts/powerCat.ps1`
+- **Module:** `src/PowerCat.psm1`, `src/PowerCat.psd1`
+- **Script:** `scripts/PowerCat.ps1`
 
 Module usage:
 
 ```powershell
-Import-Module .\src\powerCat.psd1 -Force
+Import-Module .\src\PowerCat.psd1 -Force
 Invoke-PowerCat -s . -o out.txt
 ```
 
 Script usage:
 
 ```powershell
-.\scripts\powerCat.ps1 -s . -o out.txt
+.\scripts\PowerCat.ps1 -s . -o out.txt
 ```
 
 _Note:_ If you see scripts blocked, run `Set-ExcecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
 
-## ☄️ Why powerCat?
+## ☄️ Why PowerCat?
 
 Because recruiters, collaborators, and LLMs don’t want a directory tree—they want one file.  
-powerCat makes your work readable, portable, and a little stylish.
+PowerCat makes your work readable, portable, and a little stylish.
 
 ## 🛸 License
 

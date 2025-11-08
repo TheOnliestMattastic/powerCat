@@ -79,7 +79,7 @@ pytest-results.xml
 *.md.bak
 bundle.txt
 *.concat.txt
-powerCat-output.*
+PowerCat-output.*
 output-*.txt
 
 # PowerShell

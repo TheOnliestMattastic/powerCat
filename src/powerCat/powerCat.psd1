@@ -1,6 +1,6 @@
 @{
     # Script module or binary module file associated with this manifest
-    RootModule        = 'powerCat.psm1'
+    RootModule        = 'PowerCat.psm1'
 
     # Version number of this module
     ModuleVersion     = '1.0.6'
@@ -21,7 +21,7 @@
     Copyright         = '(c) 2025 Matthew Poole Chicano. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'powerCat is a single-shot concatenator that bundles markdown and code files into one text file. Supports recursion, Markdown formatting, custom extensions, and sorting.'
+    Description       = 'PowerCat is a single-shot concatenator that bundles markdown and code files into one text file. Supports recursion, Markdown formatting, custom extensions, and sorting.'
 
     # Minimum version of the PowerShell engine required
     PowerShellVersion = '5.1'
@@ -36,7 +36,7 @@
     VariablesToExport = @()
 
     # Aliases to export from this module
-    AliasesToExport   = @('powerCat','pcat','concat')
+    AliasesToExport   = @('PowerCat','pcat','concat')
 
     # Private data to pass to the module
     PrivateData       = @{
@@ -50,13 +50,13 @@
             LicenseUri = 'https://www.gnu.org/licenses/gpl-3.0'
 
             # A URL to the main website for this project
-            ProjectUri = 'https://github.com/TheOnliestMattastic/powerCat'
+            ProjectUri = 'https://github.com/TheOnliestMattastic/PowerCat'
 
             # A URL to an icon representing this module
             IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg'
 
             # Release notes
-            ReleaseNotes = 'Initial release of powerCat. Supports recursion, Markdown, custom extensions, and sorting.'
+            ReleaseNotes = 'Initial release of PowerCat. Supports recursion, Markdown, custom extensions, and sorting.'
         }
     }
 }

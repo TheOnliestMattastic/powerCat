@@ -1,25 +1,25 @@
-# 🚀 Release Checklist for `powerCat`
+# 🚀 Release Checklist for `PowerCat`
 
 ```txt
-___________.__             ________         .__  .__                 __   
-\__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
-  |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
-  |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
-  |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
-                \/     \/          \/     \/             \/     \/        
-   _____          __    __                   __  .__                      
-  /     \ _____ _/  |__/  |______    _______/  |_|__| ____                
- /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\               
-/    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___               
-\____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  >              
-        \/     \/                \/     \/               \/               
+ ___________.__             ________         .__  .__                 __   
+ \__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
+   |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
+   |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
+   |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
+                 \/     \/          \/     \/             \/     \/        
+ /\        _____          __    __                   __  .__             /\
+ \ \      /     \ _____ _/  |__/  |______    _______/  |_|__| ____      / /
+  \ \    /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\    / / 
+   \ \  /    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___   / /  
+    \ \ \____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  > / /   
+     \/         \/     \/                \/     \/               \/  \/    
 ```
 
 This checklist ensures that every release is consistent across GitHub and the PowerShell Gallery, because I cannot trust my own memory.
 
 ## 🌒 1. Bump the Module Version
 
-- Open `powerCat.psd1`.
+- Open `PowerCat.psd1`.
 - Update the `ModuleVersion` field:
 
 ```powershell
@@ -31,7 +31,7 @@ ModuleVersion = '1.0.X'
 ## 🌓 2. Commit the Change
 
 ```powershell
-git add powerCat.psd1
+git add PowerCat.psd1
 git commit -m "Bump version to v1.0.X"
 git push origin main
 ```
@@ -62,7 +62,7 @@ git push origin v1.0.X
 - Verify on PowerShell Gallery:
 
 ```powershell
-Find-Module powerCat
+Find-Module PowerCat
 ```
 
   Should show the new version.
@@ -71,7 +71,7 @@ Find-Module powerCat
 
 - Go to your repo → **Releases** → **Draft a new release**.
 - Select the tag `v1.0.X`.
-- Copy the `ReleaseNotes` from `powerCat.psd1` or `CHANGELOG.md`.
+- Copy the `ReleaseNotes` from `PowerCat.psd1` or `CHANGELOG.md`.
 
 ## 🌘 Quick Summary
 

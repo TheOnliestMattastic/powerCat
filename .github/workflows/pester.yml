@@ -37,10 +37,10 @@ jobs:
 
       - name: Validate module manifest
         shell: pwsh
-        run: Test-ModuleManifest -Path .\src\powerCat\powerCat.psd1
+        run: Test-ModuleManifest -Path .\src\PowerCat\PowerCat.psd1
 
       - name: Publish module to PSGallery
         shell: pwsh
-        run: Publish-Module -Path .\src\powerCat -NuGetApiKey $env:PSGALLERY_KEY -Verbose
+        run: Publish-Module -Path .\src\PowerCat -NuGetApiKey $env:PSGALLERY_KEY -Verbose
         env:
           PSGALLERY_KEY: ${{ secrets.PSGALLERY_KEY }}

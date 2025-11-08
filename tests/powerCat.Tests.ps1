@@ -1,14 +1,14 @@
 # Requires -Version 5.0
-Import-Module "$PSScriptRoot\..\src\powerCat\powerCat.psd1" -Force
+Import-Module "$PSScriptRoot\..\src\PowerCat\PowerCat.psd1" -Force
 
-Describe "powerCat Module" {
+Describe "PowerCat Module" {
 
     It "Exports the Invoke-PowerCat function" {
-        Get-Command Invoke-PowerCat -Module powerCat | Should -Not -BeNullOrEmpty
+        Get-Command Invoke-PowerCat -Module PowerCat | Should -Not -BeNullOrEmpty
     }
 
     It "Exports expected aliases" {
-        (Get-Alias powerCat).Definition | Should -Be "Invoke-PowerCat"
+        (Get-Alias PowerCat).Definition | Should -Be "Invoke-PowerCat"
         (Get-Alias pcat).Definition     | Should -Be "Invoke-PowerCat"
         (Get-Alias concat).Definition   | Should -Be "Invoke-PowerCat"
     }

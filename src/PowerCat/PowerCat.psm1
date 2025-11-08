@@ -75,6 +75,9 @@ Exclude files larger than this size in bytes.
 .PARAMETER Minify
 Remove comments and blank lines from output (strips lines starting with # or // and empty lines).
 
+.PARAMETER HeaderFormat
+Format for file headers: Markdown (default), JSON, or YAML.
+
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
 Concatenates .md files from C:\Project into bundle.txt.
@@ -170,7 +173,11 @@ function Invoke-PowerCat {
         [int64]$MaxSize,
 
         [Alias("mini")]
-        [switch]$Minify
+        [switch]$Minify,
+
+        [Alias("hf")]
+        [ValidateSet("Markdown", "JSON", "YAML")]
+        [string]$HeaderFormat = "Markdown"
     )
 
     # Extend $Extensions based on switches
@@ -203,9 +210,10 @@ function Invoke-PowerCat {
         -nci, -NoCatIgnore  Skip reading catignore file
         -min, -MinSize      Exclude files smaller than this size in bytes
         -max, -MaxSize      Exclude files larger than this size in bytes
-        -mini, -Minify    Remove comments and blank lines from output
+        -mini, -Minify      Remove comments and blank lines from output
+         -hf, -HeaderFormat  Header format: Markdown (default), JSON, or YAML
 
-        -b, -Bash           Include .sh files
+         -b, -Bash           Include .sh files
         -c, -CSS            Include .css files
         -ht, -HTML          Include .html files
         -l, -Lua            Include .lua files
@@ -305,7 +313,13 @@ function Invoke-PowerCat {
     # Concatenate contents into the output file
     # Add a header before each file for clarity
     foreach ($file in $Files) {
-        Add-Content -Path $OutputFile -Value ("--- File: {0} ---" -f $file.Name)
+        # Generate header based on format
+        $header = switch ($HeaderFormat) {
+            "JSON" { ConvertTo-Json @{ file = $file.Name } -Compress }
+            "YAML" { "file: {0}" -f $file.Name }
+            default { "--- File: {0} ---" -f $file.Name }
+        }
+        Add-Content -Path $OutputFile -Value $header
 
         if (-not $Minify) {
             Add-Content -Path $OutputFile -Value ("`n")

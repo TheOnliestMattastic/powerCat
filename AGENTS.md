@@ -98,6 +98,8 @@ PowerCat/
 | Sort | st | Sort by Name, Extension, LastWriteTime, or Length |
 | CatIgnore | ci | Path to catignore file for exclusions |
 | NoCatIgnore | nci | Skip reading catignore file |
+| MinSize | min | Exclude files smaller than this size (bytes) |
+| MaxSize | max | Exclude files larger than this size (bytes) |
 
 ## Catignore File Format
 

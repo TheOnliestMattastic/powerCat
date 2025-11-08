@@ -66,6 +66,12 @@ If not specified, looks for 'catignore' in the source directory.
 .PARAMETER NoCatIgnore
 Skip reading the catignore file even if it exists.
 
+.PARAMETER MinSize
+Exclude files smaller than this size in bytes.
+
+.PARAMETER MaxSize
+Exclude files larger than this size in bytes.
+
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
 Concatenates .md files from C:\Project into bundle.txt.
@@ -80,7 +86,7 @@ Includes Bash and PowerShell files, sorted by extension.
 
 .NOTES
 Author: Matthew Poole Chicano
-License: CC0-1.0
+License: GPL v3.0
 
 .LINK
 https://github.com/TheOnliestMattastic/PowerCat
@@ -152,7 +158,13 @@ function Invoke-PowerCat {
         [string]$CatIgnore,
 
         [Alias("nci")]
-        [switch]$NoCatIgnore
+        [switch]$NoCatIgnore,
+
+        [Alias("min")]
+        [int64]$MinSize,
+
+        [Alias("max")]
+        [int64]$MaxSize
     )
 
     # Extend $Extensions based on switches
@@ -183,6 +195,8 @@ function Invoke-PowerCat {
         -st, -Sort          Sort by Name, Extension, LastWriteTime, or Length
         -ci, -CatIgnore     Path to catignore file (default: catignore in source dir)
         -nci, -NoCatIgnore  Skip reading catignore file
+        -min, -MinSize      Exclude files smaller than this size in bytes
+        -max, -MaxSize      Exclude files larger than this size in bytes
 
         -b, -Bash           Include .sh files
         -c, -CSS            Include .css files
@@ -233,12 +247,13 @@ function Invoke-PowerCat {
         }
     }
 
-    # Filter out ignored files
-    if ($IgnorePatterns.Count -gt 0) {
+    # Filter out ignored files and by size
+    if ($IgnorePatterns.Count -gt 0 -or $MinSize -gt 0 -or $MaxSize -gt 0) {
         $Files = $Files | Where-Object {
             $file = $_
             $relativePath = $file.FullName.Substring($SourceDir.Length).TrimStart('\', '/')
             
+            # Check catignore patterns
             $shouldIgnore = $false
             foreach ($pattern in $IgnorePatterns) {
                 if ($relativePath -like $pattern -or $file.Name -like $pattern) {
@@ -246,6 +261,17 @@ function Invoke-PowerCat {
                     break
                 }
             }
+            
+            # Check size constraints
+            if (-not $shouldIgnore) {
+                if ($MinSize -gt 0 -and $file.Length -lt $MinSize) {
+                    $shouldIgnore = $true
+                }
+                elseif ($MaxSize -gt 0 -and $file.Length -gt $MaxSize) {
+                    $shouldIgnore = $true
+                }
+            }
+            
             -not $shouldIgnore
         }
     }

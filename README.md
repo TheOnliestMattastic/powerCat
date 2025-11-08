@@ -97,13 +97,13 @@ Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".
 
 This repo ships both a module and a standalone script for convenience:
 
-- **Module:** `src/PowerCat.psm1`, `src/PowerCat.psd1`
+- **Module:** `src/PowerCat/PowerCat.psm1`, `src/PowerCat/PowerCat.psd1`
 - **Script:** `scripts/PowerCat.ps1`
 
 Module usage:
 
 ```powershell
-Import-Module .\src\PowerCat.psd1 -Force
+Import-Module .\src\PowerCat\ -Force
 Invoke-PowerCat -s . -o out.txt
 ```
 
@@ -113,7 +113,7 @@ Script usage:
 .\scripts\PowerCat.ps1 -s . -o out.txt
 ```
 
-_Note:_ If you see scripts blocked, run `Set-ExcecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
+_Note:_ If you see scripts blocked, run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
 
 ## ☄️ Why PowerCat?
 

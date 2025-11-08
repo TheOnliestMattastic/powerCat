@@ -1,6 +1,6 @@
 @{
     # Script module or binary module file associated with this manifest
-    RootModule        = 'powerCat.psm1'
+    RootModule        = 'PowerCat.psm1'
 
     # Version number of this module
     ModuleVersion     = '1.0.6'

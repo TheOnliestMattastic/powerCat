@@ -63,3 +63,26 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - Enhanced test robustness across different operating systems.
 - All 16 Pester tests now pass on Linux systems.
 - Comprehensive test coverage for new features (minification, custom headers, size filtering).
+
+## Version 1.1.1 (2025-11-08)
+
+### Added
+
+- **Binary file detection:** Automatically skips common binary formats (`.exe`, `.dll`, `.zip`, images, media, archives, databases, etc.) to prevent concatenation errors.
+- **Output directory validation:** Verifies output directory exists and is writable before processing files.
+- **Parameter validation:** Added `ValidateRange` attributes to `-MinSize` and `-MaxSize` for input integrity.
+
+### Fixed
+
+- Fixed minify filter regex from character class `[#//]` (matching individual characters) to explicit patterns `^#` and `^//` for proper comment filtering.
+- Improved path separator handling with `DirectorySeparatorChar` and `AltDirectorySeparatorChar` for better cross-platform compatibility.
+- Fixed `-MinSize` validation logic (changed from `-ne 0` to `-gt 0`).
+- Added path expansion for user-provided `-CatIgnore` parameter (supports `~` and relative paths).
+
+### Improved
+
+- **Efficiency:** Refactored file reading loop to use single `Get-ChildItem` scan instead of per-extension loops; consolidated output into string array and write once with `Set-Content`.
+- **Error handling:** Added comprehensive try-catch blocks around file I/O operations with descriptive error messages.
+- **UTF-8 encoding:** Specified UTF-8 encoding for all file reads and writes for consistent cross-platform text handling (no BOM).
+- **Module ergonomics:** Removed `-Help` switch from module (PowerShell-idiomatic); users rely on `Get-Help Invoke-PowerCat` for native PowerShell help discovery.
+- **Cross-platform paths:** Added `GetUnresolvedProviderPathFromPSPath` for proper tilde (`~`) and relative path expansion on all platforms.

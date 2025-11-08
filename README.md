@@ -34,11 +34,12 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - **Header formats:** Choose between Markdown, JSON, or YAML headers with `-HeaderFormat` for flexible LLM integration.
 - **Minification:** Strip comments and blank lines with `-Minify` for lean, LLM‑optimized bundles.
 - **Size filtering:** Exclude files by size with `-MinSize` and `-MaxSize` to control output volume.
+- **Binary file detection:** Automatically skips common binary formats to prevent concatenation errors.
 - **Extensions:** Default as Markdown plus switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`) or custom list via `-Extensions`.
 - **Sorting:** Control order with `-Sort Name|Extension|LastWriteTime|Length`.
 - **Catignore support:** Exclude files and directories with a `.gitignore`‑style `catignore` file.
 - **Aliases:** Quick commands `PowerCat`, `pcat`, `concat` point to `Invoke-PowerCat`.
-- **Native help:** Rich comment‑based help available via `Get-Help Invoke-PowerCat`.
+- **Native help:** Rich comment‑based help available via `Get-Help Invoke-PowerCat` (or `-Help` in the standalone script for bash/macOS users seeking Unix-style man-page ergonomics).
 
 ## 🚀 Blasting Off
 

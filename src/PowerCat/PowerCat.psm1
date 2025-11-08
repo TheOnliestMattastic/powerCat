@@ -1,22 +1,3 @@
-# ___________.__             ________         .__  .__                 __   
-# \__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
-#   |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
-#   |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
-#   |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
-#                 \/     \/          \/     \/             \/     \/        
-# /\        _____          __    __                   __  .__             /\
-# \ \      /     \ _____ _/  |__/  |______    _______/  |_|__| ____      / /
-#  \ \    /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\    / / 
-#   \ \  /    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___   / /  
-#    \ \ \____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  > / /   
-#     \/         \/     \/                \/     \/               \/  \/    
-#
-#                                presents,
-#
-#                                PowerCat:
-#                       A single‑shot concatenator 
-#        for bundling markdown and code into one clean text file. 
-# --------------------------------------------------------------------------
 <#
 .SYNOPSIS
 Concatenate files from a source directory into a single output file.
@@ -118,10 +99,6 @@ function Invoke-PowerCat {
         [Alias("file")]
         [string]$OutputFile,
 
-        [Parameter(ParameterSetName = "Help")]
-        [Alias("h")]
-        [switch]$Help,
-
         [Alias("r")]
         [Alias("rec")]
         [Alias("recursive")]
@@ -168,10 +145,12 @@ function Invoke-PowerCat {
         [switch]$NoCatIgnore,
 
         [Alias("min")]
-        [int64]$MinSize,
+        [ValidateRange(0, [int64]::MaxValue)]
+        [int64]$MinSize = 0,
 
         [Alias("max")]
-        [int64]$MaxSize,
+        [ValidateRange(0, [int64]::MaxValue)]
+        [int64]$MaxSize = 0,
 
         [Alias("mini")]
         [switch]$Minify,
@@ -189,54 +168,37 @@ function Invoke-PowerCat {
     if ($Lua) { $Extensions += ".lua" }
     $Extensions = $Extensions | Select-Object -Unique
 
-    # man-page
-    if ($Help) {
-        Write-Output @"
-    PowerCat.ps1 — A single-shot concatenator for bundling markdown and code
+    # Expand paths (handle ~, relative paths, etc.)
+    $SourceDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SourceDir)
+    $OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
 
-    USAGE:
-        .\PowerCat.ps1 -s   <SourceDir> -o <OutputFile> [options]
-
-    REQUIRED PARAMETERS:
-        -s, -SourceDir      Path to the directory containing files
-        -o, -OutputFile     Path to the output text file
-
-    OPTIONS:
-        -r, -Recurse        Include subdirectories
-        -f, -Fence          Wrap file contents in Markdown code fences (i.e., '```')
-        -e, -Extensions     Specify extensions (default: .md)
-                            Example: -e ".ps1",".json",".sh"
-        -st, -Sort          Sort by Name, Extension, LastWriteTime, or Length
-        -ci, -CatIgnore     Path to catignore file (default: catignore in source dir)
-        -nci, -NoCatIgnore  Skip reading catignore file
-        -min, -MinSize      Exclude files smaller than this size in bytes
-        -max, -MaxSize      Exclude files larger than this size in bytes
-        -mini, -Minify      Remove comments and blank lines from output
-        -hf, -HeaderFormat  Header format: Markdown (default), JSON, or YAML
-
-        -b, -Bash           Include .sh files
-        -c, -CSS            Include .css files
-        -ht, -HTML          Include .html files
-        -l, -Lua            Include .lua files
-        -p, -PowerShell     Include .ps1 files
-
-        -h, -Help           Show this help message
-
-    EXAMPLES:
-        .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
-        .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -l
-        .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -e ".ps1",".json"
-
-    DESCRIPTION:
-        PowerCat collects files by extension and concatenates them into a
-        single text file. Useful for sharing code with LLMs, recruiters,
-        or collaborators. Supports Markdown formatting for readability.
-"@
+    # Validate SourceDir
+    if (-not(Test-Path -Path $SourceDir)) { 
+        Write-Error "SourceDir '$SourceDir' not found."
         return
     }
 
-    # Validate SourceDir
-    if (-not(Test-Path -Path $SourceDir)) { Write-Error "SourceDir '$SourceDir' not found." }
+    # Validate OutputFile path is writable
+    $OutputDir = Split-Path -Path $OutputFile -Parent
+    if (-not $OutputDir) { $OutputDir = "." }
+    if (-not(Test-Path -Path $OutputDir)) {
+        Write-Error "Output directory '$OutputDir' does not exist."
+        return
+    }
+    if (-not(Test-Path -Path $OutputDir -PathType Container)) {
+        Write-Error "Output path '$OutputDir' is not a directory."
+        return
+    }
+
+    # Check if we can write to the output directory
+    try {
+        $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
+        [System.IO.File]::WriteAllText($testFile, "test")
+        Remove-Item -Path $testFile -Force
+    } catch {
+        Write-Error "Output directory '$OutputDir' is not writable: $_"
+        return
+    }
 
     # Read catignore patterns
     $IgnorePatterns = @()
@@ -244,6 +206,9 @@ function Invoke-PowerCat {
         # Determine catignore file path
         if (-not $CatIgnore) {
             $CatIgnore = Join-Path -Path $SourceDir -ChildPath "catignore"
+        } else {
+            # Expand user-provided catignore path
+            $CatIgnore = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CatIgnore)
         }
 
         # Read patterns if catignore exists
@@ -254,21 +219,24 @@ function Invoke-PowerCat {
         }
     }
 
-    # Get all files in the directory 
-    $Files = foreach ($ext in $Extensions) {
-        if ($Recurse) {
-            Get-ChildItem -Path $SourceDir -Filter "*$ext" -File -Recurse
-        }
-        else {
-            Get-ChildItem -Path $SourceDir -Filter "*$ext" -File
-        }
+    # Get all files in the directory (single scan, filter by extension in PowerShell)
+    $getChildItemParams = @{
+        Path = $SourceDir
+        File = $true
     }
+    if ($Recurse) {
+        $getChildItemParams['Recurse'] = $true
+    }
+
+    $Files = @(Get-ChildItem @getChildItemParams) | 
+        Where-Object { $Extensions -contains $_.Extension }
 
     # Filter out ignored files and by size
     if ($IgnorePatterns.Count -gt 0 -or $MinSize -gt 0 -or $MaxSize -gt 0) {
         $Files = $Files | Where-Object {
             $file = $_
-            $relativePath = $file.FullName.Substring($SourceDir.Length).TrimStart('\', '/')
+            $sourceDirPath = $SourceDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+            $relativePath = $file.FullName.Substring($sourceDirPath.Length).TrimStart('\', '/')
             
             # Check catignore patterns
             $shouldIgnore = $false
@@ -293,8 +261,23 @@ function Invoke-PowerCat {
         }
     }
 
+    # Filter out binary files to prevent crashes
+    $binaryExtensions = @('.exe', '.dll', '.bin', '.zip', '.rar', '.7z', '.gz', '.tar', '.iso',
+        '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.ico', '.webp',
+        '.mp3', '.mp4', '.avi', '.mov', '.mkv', '.flv',
+        '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+        '.db', '.sqlite', '.mdb', '.pyc', '.class', '.o', '.so', '.dylib')
+
+    $Files = $Files | Where-Object {
+        if ($binaryExtensions -contains $_.Extension.ToLower()) {
+            Write-Warning "Skipping binary file: $($_.FullName)"
+            return $false
+        }
+        return $true
+    }
+
     if ($Files.Count -eq 0) {
-        Write-Output "No matching files found in $SourceDir"
+        Write-Output "No matching text files found in $SourceDir"
         return
     } 
     else {
@@ -308,11 +291,9 @@ function Invoke-PowerCat {
         "Length" { $Files = $Files | Sort-Object Length }
     }
 
-    # Clear OutputFile to prepare for concatenation
-    Remove-Item -Path $OutputFile -ErrorAction SilentlyContinue
+    # Build output content in a string array for efficiency
+    $OutputContent = @()
 
-    # Concatenate contents into the output file
-    # Add a header before each file for clarity
     foreach ($file in $Files) {
         # Generate header based on format
         $header = switch ($HeaderFormat) {
@@ -320,39 +301,57 @@ function Invoke-PowerCat {
             "YAML" { "file: {0}" -f $file.Name }
             default { "--- File: {0} ---" -f $file.Name }
         }
-        Add-Content -Path $OutputFile -Value $header
-
+        $OutputContent += $header
+        
         if (-not $Minify) {
-            Add-Content -Path $OutputFile -Value ("`n")
+            $OutputContent += ""
         }
-    
+
         # Open fence for -f flag
         if ($Fence) {
-            Add-Content -Path $OutputFile -Value ('```{0}' -f $file.Extension.TrimStart('.'))
+            $OutputContent += '```{0}' -f $file.Extension.TrimStart('.')
         }
-    
-        # Read file content and apply minification if requested
-        $content = Get-Content -Path $file.FullName
-    
-        if ($Minify) {
-            $content = $content | Where-Object {
-                $_ -and -not ($_.TrimStart() -match '^[#//]')
+
+        # Read file content with UTF-8 encoding (cross-platform compatibility)
+        try {
+            $content = Get-Content -Path $file.FullName -Encoding UTF8 -ErrorAction Stop
+            
+            if ($Minify) {
+                $content = $content | Where-Object {
+                    $trimmed = $_.TrimStart()
+                    # Skip empty lines and comment lines (# or //)
+                    if ($trimmed) {
+                        -not ($trimmed -match '^#' -or $trimmed -match '^//')
+                    } else {
+                        $false
+                    }
+                }
             }
+            
+            $OutputContent += $content
+        } catch {
+            Write-Warning "Failed to read file '$($file.FullName)': $_"
+            continue
         }
-        
-        $content | Add-Content -Path $OutputFile
- 
+
         # Close fence for -f flag
         if ($Fence) {
-            Add-Content -Path $OutputFile -Value ('```') 
+            $OutputContent += '```'
         }
- 
+
         if (-not $Minify) {
-            Add-Content -Path $OutputFile -Value ("`n")
+            $OutputContent += ""
         }
     }
 
-    Write-Host "Concatenation complete. Output saved to $OutputFile"
+    # Write all content at once with UTF-8 encoding (no BOM for cross-platform compatibility)
+    try {
+        $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
+        Write-Host "Concatenation complete. Output saved to $OutputFile"
+    } catch {
+        Write-Error "Failed to write output file '$OutputFile': $_"
+        return
+    }
     
     # Return the output file object for pipeline support
     Get-Item -Path $OutputFile

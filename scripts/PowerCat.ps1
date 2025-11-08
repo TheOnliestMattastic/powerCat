@@ -102,11 +102,12 @@ https://theonliestmattastic.github.io/
 #>
 
 param (
-    [Parameter(Mandatory = $true, ParameterSetName = "Run")]
+    [Parameter(Mandatory = $true, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
     [Alias("s")]
     [Alias("source")]
     [Alias("src")]
     [Alias("dir")]
+    [Alias("FullName")]
     [string]$SourceDir,
 
     [Parameter(Mandatory = $true, ParameterSetName = "Run")]
@@ -345,3 +346,6 @@ foreach ($file in $Files) {
 }
 
 Write-Host "Concatenation complete. Output saved to $OutputFile"
+
+# Return the output file object for pipeline support
+Get-Item -Path $OutputFile

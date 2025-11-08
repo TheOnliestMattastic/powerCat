@@ -103,11 +103,12 @@ https://theonliestmattastic.github.io/
 function Invoke-PowerCat {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory = $true, ParameterSetName = "Run")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [Alias("s")]
         [Alias("source")]
         [Alias("src")]
         [Alias("dir")]
+        [Alias("FullName")]
         [string]$SourceDir,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Run")]
@@ -352,6 +353,9 @@ function Invoke-PowerCat {
     }
 
     Write-Host "Concatenation complete. Output saved to $OutputFile"
+    
+    # Return the output file object for pipeline support
+    Get-Item -Path $OutputFile
 }
 # --- Aliases ---
 Set-Alias -Name PowerCat -Value Invoke-PowerCat

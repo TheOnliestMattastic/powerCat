@@ -212,9 +212,9 @@ function Invoke-PowerCat {
         -min, -MinSize      Exclude files smaller than this size in bytes
         -max, -MaxSize      Exclude files larger than this size in bytes
         -mini, -Minify      Remove comments and blank lines from output
-         -hf, -HeaderFormat  Header format: Markdown (default), JSON, or YAML
+        -hf, -HeaderFormat  Header format: Markdown (default), JSON, or YAML
 
-         -b, -Bash           Include .sh files
+        -b, -Bash           Include .sh files
         -c, -CSS            Include .css files
         -ht, -HTML          Include .html files
         -l, -Lua            Include .lua files

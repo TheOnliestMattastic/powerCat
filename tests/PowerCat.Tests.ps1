@@ -1,5 +1,6 @@
 # Requires -Version 5.0
-Import-Module "/home/mattastic/gitHub/powerCat/src/PowerCat/PowerCat.psd1" -Force
+$ModulePath = Join-Path -Path (Split-Path -Parent $PSScriptRoot) -ChildPath "src/PowerCat/PowerCat.psd1"
+Import-Module $ModulePath -Force
 
 Describe "PowerCat Module" {
 

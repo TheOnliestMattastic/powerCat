@@ -263,11 +263,11 @@ function HelloWorld {
 
     Context "Output directory validation" {
         It "Handles non-existent output directory gracefully" {
-            $nonExistentDir = "/tmp/NonExistent_$([System.Guid]::NewGuid())"
+            $baseTempDir = [System.IO.Path]::GetTempPath()
+            $nonExistentDir = Join-Path $baseTempDir "NonExistent_$([System.Guid]::NewGuid())"
             $outFile = Join-Path $nonExistentDir "output.txt"
             
-            $result = Invoke-PowerCat -s /tmp -o $outFile 2>&1 | Out-String
-            $result | Should -Match "output|directory|path|error"
+            { Invoke-PowerCat -s $baseTempDir -o $outFile 2>&1 } | Should -Throw
         }
     }
 

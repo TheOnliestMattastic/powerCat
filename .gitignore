@@ -1,0 +1,102 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Windows & PowerShell
+$RECYCLE.BIN/
+.VariableName
+*.lnk
+*.exe
+*.dll
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Linux
+.nfs*
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+*.code-workspace
+
+# Build & Compilation
+bin/
+obj/
+dist/
+build/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+*.out
+
+# Dependency Management
+node_modules/
+packages/
+vendor/
+
+# Environment & Configuration
+.env
+.env.local
+.env.*.local
+config/secrets.json
+appsettings.*.json
+
+# Temporary & Cache Files
+*.tmp
+*.temp
+*.cache
+.cache/
+*.log
+logs/
+*.bak
+*.swp
+
+# Testing
+coverage/
+.coverage
+.pytest_cache/
+__pycache__/
+*.pyc
+.tox/
+pytest-results.xml
+
+# AI & LLM Context Files
+*.md.bak
+bundle.txt
+*.concat.txt
+powerCat-output.*
+output-*.txt
+
+# PowerShell
+*.ps1.bak
+*.psm1.bak
+*.psd1.bak
+
+# Package Manager Artifacts
+*.nupkg
+*.nuspec
+
+# Git
+.git/
+
+# NPM
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+package-lock.json
+yarn.lock

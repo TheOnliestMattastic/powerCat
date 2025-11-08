@@ -41,3 +41,25 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 ### Changed
 
 - Changed license from CC0-1.0 to GPL v3.
+
+## Version 1.1.0 (2025-11-08)
+
+### Added
+
+- **Minify parameter** (`-Minify`, `-mini`): Remove comments and blank lines from output for cleaner code bundles.
+- **HeaderFormat parameter** (`-HeaderFormat`, `-hf`): Specify output header format—Markdown (default), JSON, or YAML.
+- **MinSize parameter** (`-MinSize`, `-min`): Exclude files smaller than specified size in bytes.
+- **MaxSize parameter** (`-MaxSize`, `-max`): Exclude files larger than specified size in bytes.
+
+### Fixed
+
+- Fixed Pester tests for cross-platform compatibility (Linux/macOS/Windows).
+- Updated module import paths to use forward slashes (`/`) instead of backslashes (`\`).
+- Replaced `$env:TEMP` with `/tmp` for Linux systems where environment variable is unavailable.
+- Added `-Raw` flag to `Get-Content` calls for proper multi-line regex matching in test assertions.
+
+### Improved
+
+- Enhanced test robustness across different operating systems.
+- All 16 Pester tests now pass on Linux systems.
+- Comprehensive test coverage for new features (minification, custom headers, size filtering).

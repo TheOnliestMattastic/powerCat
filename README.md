@@ -31,8 +31,12 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - **Concatenation:** Bundle multiple filetypes into a single output file.
 - **Recursion:** Include subdirectories with `-Recurse`.
 - **Markdown fences:** Opt‑in code fencing with `-Fence` for clean LLM/GitHub sharing.
+- **Header formats:** Choose between Markdown, JSON, or YAML headers with `-HeaderFormat` for flexible LLM integration.
+- **Minification:** Strip comments and blank lines with `-Minify` for lean, LLM‑optimized bundles.
+- **Size filtering:** Exclude files by size with `-MinSize` and `-MaxSize` to control output volume.
 - **Extensions:** Default as Markdown plus switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`) or custom list via `-Extensions`.
 - **Sorting:** Control order with `-Sort Name|Extension|LastWriteTime|Length`.
+- **Catignore support:** Exclude files and directories with a `.gitignore`‑style `catignore` file.
 - **Aliases:** Quick commands `PowerCat`, `pcat`, `concat` point to `Invoke-PowerCat`.
 - **Native help:** Rich comment‑based help available via `Get-Help Invoke-PowerCat`.
 
@@ -75,22 +79,48 @@ Invoke-PowerCat -Help
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
 ```
 
-- **Recurse and wrap each file in fenced blocks:**
+- **Bundle for LLMs with minification and fenced code:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -Fence
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -Minify -Fence -PowerShell
 ```
 
-- **Add Bash and PowerShell files, sorted by extension:**
+This strips comments and blank lines, making the bundle lean and optimized for token limits.
+
+- **Generate JSON headers for structured LLM parsing:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Bash -PowerShell -Sort Extension
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
 ```
 
-- **Custom extensions:**
+Output includes structured headers like `{"file":"script.ps1"}` for better LLM integration.
+
+- **Exclude large files to optimize for token limits:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh"
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -MaxSize 50KB -Bash
+```
+
+- **Custom extensions and sorting:**
+
+```powershell
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
+```
+
+- **Use catignore to exclude directories:**
+
+Create a `catignore` file in your project:
+```
+node_modules/
+.git/
+*.log
+bin/
+obj/
+```
+
+Then run:
+```powershell
+Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -PowerShell
 ```
 
 ## 🗺️ Repo structure
@@ -117,8 +147,48 @@ _Note:_ If you see scripts blocked, run `Set-ExecutionPolicy RemoteSigned -Scope
 
 ## ☄️ Why PowerCat?
 
-Because recruiters, collaborators, and LLMs don’t want a directory tree—they want one file.  
-PowerCat makes your work readable, portable, and a little stylish.
+Because recruiters, collaborators, and LLMs don't want a directory tree—they want one file structured and readable.  
+PowerCat makes your work portable, token-efficient, and a little stylish.
+
+### PowerCat vs. Standard `cat`
+
+**Standard `cat` or `Get-Content`:**
+```powershell
+# Just dumps all files end-to-end with no structure
+Get-ChildItem -Recurse -Filter "*.ps1" | Get-Content
+# Output: No file separators, no headers, unclear which code belongs where
+```
+
+**PowerCat:**
+```powershell
+Invoke-PowerCat -s . -o bundle.txt -Recurse -Fence -PowerShell
+# Output:
+# --- File: script1.ps1 ---
+# 
+# ```ps1
+# function HelloWorld { Write-Host "Hello" }
+# ```
+# 
+# --- File: script2.ps1 ---
+# 
+# ```ps1
+# function GoodbyeWorld { Write-Host "Goodbye" }
+# ```
+```
+
+**The difference:**
+| Feature | `cat` | PowerCat |
+|---------|-------|----------|
+| File headers | ❌ | ✅ (Markdown/JSON/YAML) |
+| Code fencing | ❌ | ✅ (Markdown fences) |
+| Minification | ❌ | ✅ (strip comments) |
+| Size filtering | ❌ | ✅ (min/max size) |
+| Exclusion patterns | ❌ | ✅ (catignore support) |
+| LLM optimization | ❌ | ✅ (token-aware) |
+| Sorting control | ❌ | ✅ (by name, extension, size, date) |
+| Multiple extensions | ❌ | ✅ (flexible file type selection) |
+
+PowerCat is purpose-built for sharing code with recruiters, collaborators, and LLMs—creating readable, structured, LLM-optimized bundles that respect token limits.
 
 ## 🛸 License
 

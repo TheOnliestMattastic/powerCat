@@ -35,6 +35,15 @@ This file documents conventions and commands for AI agents working on the PowerC
 Invoke-Pester -Path tests/
 ```
 
+### Cross-Platform Considerations
+
+PowerCat supports Windows, macOS, and Linux. When working on tests and scripts:
+
+- **Path Separators:** Use forward slashes (`/`) instead of backslashes (`\`) for cross-platform compatibility
+- **Environment Variables:** Avoid `$env:TEMP` (not available on Linux). Use `/tmp` instead
+- **Get-Content:** Use `-Raw` flag when matching multi-line content with regex to ensure proper string matching
+- **Module Import:** Use absolute paths or test-aware path resolution for module imports in tests
+
 ### Running the Module
 
 ```powershell

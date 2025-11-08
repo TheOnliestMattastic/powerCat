@@ -72,6 +72,9 @@ Exclude files smaller than this size in bytes.
 .PARAMETER MaxSize
 Exclude files larger than this size in bytes.
 
+.PARAMETER Minify
+Remove comments and blank lines from output (strips lines starting with # or // and empty lines).
+
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
 Concatenates .md files from C:\Project into bundle.txt.
@@ -163,15 +166,18 @@ param (
     [int64]$MinSize,
 
     [Alias("max")]
-    [int64]$MaxSize
+    [int64]$MaxSize,
+
+    [Alias("mini")]
+    [switch]$Minify
 )
 
 # Extend $Extensions based on switches
-if ($Bash)          { $Extensions += ".sh" }
-if ($HTML)          { $Extensions += ".html" }
-if ($CSS)           { $Extensions += ".css" }
-if ($Powershell)    { $Extensions += ".ps1" }
-if ($Lua)           { $Extensions += ".lua"}
+if ($Bash) { $Extensions += ".sh" }
+if ($HTML) { $Extensions += ".html" }
+if ($CSS) { $Extensions += ".css" }
+if ($Powershell) { $Extensions += ".ps1" }
+if ($Lua) { $Extensions += ".lua" }
 
 # man-page
 if ($Help) {
@@ -195,7 +201,8 @@ OPTIONS:
     -nci, -NoCatIgnore  Skip reading catignore file
     -min, -MinSize      Exclude files smaller than this size in bytes
     -max, -MaxSize      Exclude files larger than this size in bytes
-
+    -mini, -Minify    Remove comments and blank lines from output
+    
     -b, -Bash           Include .sh files
     -c, -CSS            Include .css files
     -ht, -HTML          Include .html files
@@ -217,7 +224,7 @@ DESCRIPTION:
     return
 }
 # Validate SourceDir
-if(-not(Test-Path -Path $SourceDir)){Write-Error "SourceDir '$SourceDir' not found."}
+if (-not(Test-Path -Path $SourceDir)) { Write-Error "SourceDir '$SourceDir' not found." }
 
 # Read catignore patterns
 $IgnorePatterns = @()
@@ -239,7 +246,8 @@ if (-not $NoCatIgnore) {
 $Files = foreach ($ext in $Extensions) {
     if ($Recurse) {
         Get-ChildItem -Path $SourceDir -Filter "*$ext" -File -Recurse
-    } else {
+    }
+    else {
         Get-ChildItem -Path $SourceDir -Filter "*$ext" -File
     }
 }
@@ -279,10 +287,10 @@ if ($Files.Count -eq 0) {
 }
 
 switch ($Sort) {
-    "Name"          { $Files = $Files | Sort-Object Name }
-    "Extension"     { $Files = $Files | Sort-Object Extension, Name }
+    "Name" { $Files = $Files | Sort-Object Name }
+    "Extension" { $Files = $Files | Sort-Object Extension, Name }
     "LastWriteTime" { $Files = $Files | Sort-Object LastWriteTime }
-    "Length"        { $Files = $Files | Sort-Object Length }
+    "Length" { $Files = $Files | Sort-Object Length }
 }
 
 # Clear OutputFile to prepare for concatenation
@@ -292,21 +300,34 @@ Remove-Item -Path $OutputFile -ErrorAction SilentlyContinue
 # Add a header before each file for clarity
 foreach ($file in $Files) {
     Add-Content -Path $OutputFile -Value ("--- File: {0} ---" -f $file.Name)
-    Add-Content -Path $OutputFile -Value ("`n")
+    if (-not $Minify) {
+        Add-Content -Path $OutputFile -Value ("`n")
+    }
 
     # Open fence for -f flag
     if ($Fence) {
         Add-Content -Path $OutputFile -Value ('```{0}' -f $file.Extension.TrimStart('.'))
     }
 
-    Get-Content -Path $file.FullName | Add-Content -Path $OutputFile
+    # Read file content and apply minification if requested
+    $content = Get-Content -Path $file.FullName
+    
+    if ($Minify) {
+        $content = $content | Where-Object {
+            $_ -and -not ($_.TrimStart() -match '^[#//]')
+        }
+    }
+    
+    $content | Add-Content -Path $OutputFile
 
     # Close fence for -f flag
     if ($Fence) {
         Add-Content -Path $OutputFile -Value ('```') 
     }
 
-    Add-Content -Path $OutputFile -Value ("`n")
+    if (-not $Minify) {
+        Add-Content -Path $OutputFile -Value ("`n")
+    }
 }
 
 Write-Host "Concatenation complete. Output saved to $OutputFile"

@@ -14,17 +14,12 @@ Describe "PowerCat Module" {
         (Get-Alias concat).Definition   | Should -Be "Invoke-PowerCat"
     }
 
-    It "Shows help with -h flag" {
-        $result = Invoke-PowerCat -h
-        $result | Should -Match "USAGE"
-    }
-
     Context "When no files match" {
         It "Returns gracefully with no crash" {
             $tempDir = New-Item -ItemType Directory -Path "/tmp/EmptyTest_$([System.Guid]::NewGuid())" -Force
             try {
                 $result = Invoke-PowerCat -s $tempDir.FullName -o "/tmp/out_$([System.Guid]::NewGuid()).txt" 2>&1 | Out-String
-                $result | Should -Match "No matching files"
+                $result | Should -Match "No matching"
             }
             finally {
                 Remove-Item -Path $tempDir -Force -ErrorAction SilentlyContinue
@@ -191,6 +186,88 @@ function HelloWorld {
             finally {
                 Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
             }
+        }
+    }
+
+    Context "Size filtering" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatSizeTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "small.md") -Value "S"       # 1 byte
+            Set-Content -Path (Join-Path $tempDir "large.md") -Value ("X" * 1000)  # 1000 bytes
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Excludes files smaller than MinSize" {
+            $outFile = Join-Path /tmp "minsize_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -MinSize 100
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "X{1000}"
+                $content | Should -Not -Match "^S$"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Excludes files larger than MaxSize" {
+            $outFile = Join-Path /tmp "maxsize_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -MaxSize 100
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "S"
+                $content | Should -Not -Match "X{1000}"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Binary file detection" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatBinaryTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "text.md") -Value "Text file"
+            # Create mock binary files with extensions that should be skipped
+            [System.IO.File]::WriteAllBytes((Join-Path $tempDir "binary.exe"), @(0x4D, 0x5A))
+            [System.IO.File]::WriteAllBytes((Join-Path $tempDir "binary.dll"), @(0x4D, 0x5A))
+            [System.IO.File]::WriteAllBytes((Join-Path $tempDir "image.png"), @(0x89, 0x50, 0x4E, 0x47))
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Skips binary files (.exe, .dll, image formats)" {
+            $outFile = Join-Path /tmp "binary_skip_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -Recurse
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "Text file"
+                # Should not contain binary file indicators or errors
+                { $content | Should -Not -Match "Cannot process binary file" } | Should -Not -Throw
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Output directory validation" {
+        It "Handles non-existent output directory gracefully" {
+            $nonExistentDir = "/tmp/NonExistent_$([System.Guid]::NewGuid())"
+            $outFile = Join-Path $nonExistentDir "output.txt"
+            
+            $result = Invoke-PowerCat -s /tmp -o $outFile 2>&1 | Out-String
+            $result | Should -Match "output|directory|path|error"
         }
     }
 

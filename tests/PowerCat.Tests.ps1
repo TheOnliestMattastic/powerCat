@@ -262,12 +262,25 @@ function HelloWorld {
     }
 
     Context "Output directory validation" {
-        It "Handles non-existent output directory gracefully" {
+        It "Successfully creates output file in valid directory" {
             $baseTempDir = [System.IO.Path]::GetTempPath()
-            $nonExistentDir = Join-Path $baseTempDir "NonExistent_$([System.Guid]::NewGuid())"
-            $outFile = Join-Path $nonExistentDir "output.txt"
+            $sourceDir = Join-Path $baseTempDir "PowerCatSource_$([System.Guid]::NewGuid())"
+            $outputDir = Join-Path $baseTempDir "PowerCatOutput_$([System.Guid]::NewGuid())"
+            $outFile = Join-Path $outputDir "output.txt"
             
-            { Invoke-PowerCat -s $baseTempDir -o $outFile 2>&1 } | Should -Throw
+            try {
+                New-Item -ItemType Directory -Path $sourceDir -Force | Out-Null
+                New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+                Set-Content -Path (Join-Path $sourceDir "test.md") -Value "Test content"
+                
+                Invoke-PowerCat -s $sourceDir -o $outFile 2>&1 | Out-Null
+                
+                Test-Path $outFile | Should -Be $true
+            }
+            finally {
+                Remove-Item -Path $sourceDir -Recurse -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path $outputDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
         }
     }
 

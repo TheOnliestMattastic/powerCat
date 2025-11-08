@@ -1,0 +1,254 @@
+# Requires -Version 5.0
+Import-Module "/home/mattastic/gitHub/powerCat/src/PowerCat/PowerCat.psd1" -Force
+
+Describe "PowerCat Module" {
+
+    It "Exports the Invoke-PowerCat function" {
+        Get-Command Invoke-PowerCat -Module PowerCat | Should -Not -BeNullOrEmpty
+    }
+
+    It "Exports expected aliases" {
+        (Get-Alias PowerCat).Definition | Should -Be "Invoke-PowerCat"
+        (Get-Alias pcat).Definition     | Should -Be "Invoke-PowerCat"
+        (Get-Alias concat).Definition   | Should -Be "Invoke-PowerCat"
+    }
+
+    It "Shows help with -h flag" {
+        $result = Invoke-PowerCat -h
+        $result | Should -Match "USAGE"
+    }
+
+    Context "When no files match" {
+        It "Returns gracefully with no crash" {
+            $tempDir = New-Item -ItemType Directory -Path "/tmp/EmptyTest_$([System.Guid]::NewGuid())" -Force
+            try {
+                $result = Invoke-PowerCat -s $tempDir.FullName -o "/tmp/out_$([System.Guid]::NewGuid()).txt" 2>&1 | Out-String
+                $result | Should -Match "No matching files"
+            }
+            finally {
+                Remove-Item -Path $tempDir -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "When files exist" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "a.md") -Value "Hello"
+            Set-Content -Path (Join-Path $tempDir "b.md") -Value "World"
+            # Create test files with comments for minification tests
+            Set-Content -Path (Join-Path $tempDir "test.ps1") -Value @"
+# This is a comment
+function HelloWorld {
+    Write-Host "Hello"
+}
+
+# End
+"@
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Concatenates .md files by default" {
+            $outFile = Join-Path /tmp "bundle_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile
+
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "Hello"
+                $content | Should -Match "World"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Uses Markdown headers by default" {
+            $outFile = Join-Path /tmp "markdown_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md"
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "--- File: a.md ---"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "HeaderFormat parameter" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatHeaderTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "test.md") -Value "Content"
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Generates JSON headers with -hf JSON" {
+            $outFile = Join-Path /tmp "json_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -hf JSON
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match '\{"file":"test\.md"\}'
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Generates YAML headers with -hf YAML" {
+            $outFile = Join-Path /tmp "yaml_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -hf YAML
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "file: test\.md"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Accepts alias -hf for -HeaderFormat" {
+            $outFile = Join-Path /tmp "alias_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -hf JSON
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match '\{"file":"test\.md"\}'
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Minify parameter" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatMinifyTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "test.ps1") -Value @"
+# Comment line 1
+function HelloWorld {
+    # Comment inside function
+    Write-Host "Hello"
+}
+
+# Comment line 2
+"@
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Removes comments and blank lines with -Minify" {
+            $outFile = Join-Path /tmp "minify_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -Minify
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Not -Match "# Comment"
+                $content | Should -Match "function HelloWorld"
+                $content | Should -Match 'Write-Host "Hello"'
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Accepts alias -mini for -Minify" {
+            $outFile = Join-Path /tmp "minify_alias_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -mini
+                
+                $content = Get-Content $outFile
+                $content | Should -Not -Match "# Comment"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Works with custom headers" {
+            $outFile = Join-Path /tmp "minify_json_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -Minify -hf JSON
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match '\{"file":"test\.ps1"\}'
+                $content | Should -Not -Match "# Comment"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Pipeline support" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatPipelineTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "test.md") -Value "Test Content"
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Accepts pipeline input from string path" {
+            $outFile = Join-Path /tmp "pipe_string_$([System.Guid]::NewGuid()).txt"
+            try {
+                $result = $tempDir | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
+                $result | Should -Not -BeNullOrEmpty
+                $result.Name | Should -Match "pipe_string"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Accepts pipeline input from directory object" {
+            $outFile = Join-Path /tmp "pipe_obj_$([System.Guid]::NewGuid()).txt"
+            try {
+                $dirObj = Get-Item $tempDir
+                $result = $dirObj | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
+                $result | Should -Not -BeNullOrEmpty
+                $result.Name | Should -Match "pipe_obj"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Returns FileInfo object for pipeline output" {
+            $outFile = Join-Path /tmp "pipe_output_$([System.Guid]::NewGuid()).txt"
+            try {
+                $result = Invoke-PowerCat -s $tempDir -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
+                $result | Should -Not -BeNullOrEmpty
+                $result | Get-Member | Where-Object Name -eq "FullName" | Should -Not -BeNullOrEmpty
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Supports pipeline chaining with Get-Content" {
+            $outFile = Join-Path /tmp "pipe_chain_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".md" | Get-Content -Raw | Should -Match "Test Content"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+}

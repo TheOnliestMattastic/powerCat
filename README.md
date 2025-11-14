@@ -1,18 +1,21 @@
 # 🐱 PowerCat
 
 ```txt
- ___________.__             ________         .__  .__                 __   
- \__    ___/|  |__   ____   \_____  \   ____ |  | |__| ____   _______/  |_ 
-   |    |   |  |  \_/ __ \   /   |   \ /    \|  | |  |/ __ \ /  ___/\   __\
-   |    |   |   Y  \  ___/  /    |    \   |  \  |_|  \  ___/ \___ \  |  |  
-   |____|   |___|  /\___  > \_______  /___|  /____/__|\___  >____  > |__|  
-                 \/     \/          \/     \/             \/     \/        
- /\        _____          __    __                   __  .__             /\
- \ \      /     \ _____ _/  |__/  |______    _______/  |_|__| ____      / /
-  \ \    /  \ /  \\__  \\   __\   __\__  \  /  ___/\   __\  |/ ___\    / / 
-   \ \  /    Y    \/ __ \|  |  |  |  / __ \_\___ \  |  | |  \  \___   / /  
-    \ \ \____|__  (____  /__|  |__| (____  /____  > |__| |__|\___  > / /   
-     \/         \/     \/                \/     \/               \/  \/    
+M""""""""M dP                MMP"""""YMM          dP oo                     dP   
+Mmmm  mmmM 88                M' .mmm. `M          88                        88   
+MMMM  MMMM 88d888b. .d8888b. M  MMMMM  M 88d888b. 88 dP .d8888b. .d8888b. d8888P 
+MMMM  MMMM 88'  `88 88ooood8 M  MMMMM  M 88'  `88 88 88 88ooood8 Y8ooooo.   88   
+MMMM  MMMM 88    88 88.  ... M. `MMM' .M 88    88 88 88 88.  ...       88   88   
+MMMM  MMMM dP    dP `88888P' MMb     dMM dP    dP dP dP `88888P' `88888P'   dP   
+MMMMMMMMMM                   MMMMMMMMMMM                                         
+                                                                                 
+M"""""`'"""`YM            dP     dP                       dP   oo                
+M  mm.  mm.  M            88     88                       88                     
+M  MMM  MMM  M .d8888b. d8888P d8888P .d8888b. .d8888b. d8888P dP .d8888b.       
+M  MMM  MMM  M 88'  `88   88     88   88'  `88 Y8ooooo.   88   88 88'  `""       
+M  MMM  MMM  M 88.  .88   88     88   88.  .88       88   88   88 88.  ...       
+M  MMM  MMM  M `88888P8   dP     dP   `88888P8 `88888P'   dP   dP `88888P'       
+MMMMMMMMMMMMMM                                                                   
 ```
 
 [![PowerCat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/PowerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/PowerCat/actions/workflows/pester.yml)

@@ -1,35 +1,8 @@
 # 🐱 POWERcat
 
-```txt
- ███████████ █████                                                                       
-░█░░░███░░░█░░███                                                                        
-░   ░███  ░  ░███████    ██████                                                          
-    ░███     ░███░░███  ███░░███                                                         
-    ░███     ░███ ░███ ░███████                                                          
-    ░███     ░███ ░███ ░███░░░                                                           
-    █████    ████ █████░░██████                                                          
-   ░░░░░    ░░░░ ░░░░░  ░░░░░░                                                           
-                                                                                         
-    ███████               ████   ███                    █████                            
-  ███░░░░░███            ░░███  ░░░                    ░░███                             
- ███     ░░███ ████████   ░███  ████   ██████   █████  ███████                           
-░███      ░███░░███░░███  ░███ ░░███  ███░░███ ███░░  ░░░███░                            
-░███      ░███ ░███ ░███  ░███  ░███ ░███████ ░░█████   ░███                             
-░░███     ███  ░███ ░███  ░███  ░███ ░███░░░   ░░░░███  ░███ ███                         
- ░░░███████░   ████ █████ █████ █████░░██████  ██████   ░░█████                          
-   ░░░░░░░    ░░░░ ░░░░░ ░░░░░ ░░░░░  ░░░░░░  ░░░░░░     ░░░░░                           
-                                                                                         
- ██████   ██████            █████     █████                       █████     ███          
-░░██████ ██████            ░░███     ░░███                       ░░███     ░░░           
- ░███░█████░███   ██████   ███████   ███████    ██████    █████  ███████   ████   ██████ 
- ░███░░███ ░███  ░░░░░███ ░░░███░   ░░░███░    ░░░░░███  ███░░  ░░░███░   ░░███  ███░░███
- ░███ ░░░  ░███   ███████   ░███      ░███      ███████ ░░█████   ░███     ░███ ░███ ░░░ 
- ░███      ░███  ███░░███   ░███ ███  ░███ ███ ███░░███  ░░░░███  ░███ ███ ░███ ░███  ███
- █████     █████░░████████  ░░█████   ░░█████ ░░████████ ██████   ░░█████  █████░░██████ 
-░░░░░     ░░░░░  ░░░░░░░░    ░░░░░     ░░░░░   ░░░░░░░░ ░░░░░░     ░░░░░  ░░░░░  ░░░░░░  
-```
+![Logo](assets/logo.png)
 
-[![PowerCat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/PowerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/PowerCat/actions/workflows/pester.yml)
+[![POWERcat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/PowerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/PowerCat/actions/workflows/pester.yml)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PowerCat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/PowerCat)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-bd93f9?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.gnu.org/licenses/gpl-3.0)
 [![Portfolio](https://img.shields.io/badge/Portfolio-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)](https://theonliestmattastic.github.io/)
@@ -37,7 +10,7 @@
 
 ## 🔭 Overview
 
-**PowerCat** is a single‑shot concatenator for bundling markdown and code into one clean text file.  
+**POWERcat** is a single‑shot concatenator for bundling markdown and code into one clean text file.  
 It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, and built with recruiter‑friendly ergonomics.
 
 ## ✨ Features
@@ -60,20 +33,20 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 ### Install from PowerShell Gallery
 
 ```powershell
-Install-Module -Name PowerCat -Scope CurrentUser
+Install-Module -Name POWERcat -Scope CurrentUser
 Import-Module PowerCat
 ```
 
 ### Run as a cmdlet
 
 ```powershell
-Invoke-PowerCat -SourceDir "C:\Project" -OutputFile "C:\bundle.txt"
+Invoke-POWERcat -SourceDir "C:\Project" -OutputFile "C:\bundle.txt"
 ```
 
 ### Aliases
 
 ```powershell
-PowerCat -s . -o out.txt
+POWERcat -s . -o out.txt
 pcat -s . -o out.txt -r -f
 concat -s . -o out.txt -b -p -Sort Extension
 ```
@@ -81,9 +54,9 @@ concat -s . -o out.txt -b -p -Sort Extension
 ### Help
 
 ```powershell
-Get-Help Invoke-PowerCat -Full
-Get-Help Invoke-PowerCat -Examples
-Invoke-PowerCat -Help
+Get-Help Invoke-POWERcat -Full
+Get-Help Invoke-POWERcat -Examples
+Invoke-POWERcat -Help
 ```
 
 ## 🧪 Examples
@@ -91,13 +64,13 @@ Invoke-PowerCat -Help
 - **Concatenate `.md` files (default):**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
+Invoke-POWERcat -s "C:\Project" -o "C:\bundle.txt"
 ```
 
 - **Bundle for LLMs with minification and fenced code:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -Minify -Fence -PowerShell
+Invoke-POWERcat -s "C:\Project" -o "C:\bundle.txt" -Recurse -Minify -Fence -PowerShell
 ```
 
 This strips comments and blank lines, making the bundle lean and optimized for token limits.
@@ -105,7 +78,7 @@ This strips comments and blank lines, making the bundle lean and optimized for t
 - **Generate JSON headers for structured LLM parsing:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
+Invoke-POWERcat -s "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
 ```
 
 Output includes structured headers like `{"file":"script.ps1"}` for better LLM integration.
@@ -113,13 +86,13 @@ Output includes structured headers like `{"file":"script.ps1"}` for better LLM i
 - **Exclude large files to optimize for token limits:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -MaxSize 50KB -Bash
+Invoke-POWERcat -s "C:\Project" -o "C:\bundle.txt" -Recurse -MaxSize 50KB -Bash
 ```
 
 - **Custom extensions and sorting:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
+Invoke-POWERcat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
 ```
 
 - **Use catignore to exclude directories:**
@@ -137,7 +110,7 @@ obj/
 Then run:
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -PowerShell
+Invoke-POWERcat -s "C:\Project" -o "C:\bundle.txt" -Recurse -PowerShell
 ```
 
 ## 🗺️ Repo structure
@@ -162,12 +135,12 @@ Script usage:
 
 _Note:_ If you see scripts blocked, run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
 
-## ☄️ Why PowerCat?
+## ☄️ Why POWERcat?
 
 Because recruiters, collaborators, and LLMs don't want a directory tree—they want one file structured and readable.  
 PowerCat makes your work portable, token-efficient, and a little stylish.
 
-### PowerCat vs. Standard `cat`
+### POWERcat vs. Standard `cat`
 
 **Standard `cat` or `Get-Content`:**
 
@@ -177,10 +150,10 @@ Get-ChildItem -Recurse -Filter "*.ps1" | Get-Content
 # Output: No file separators, no headers, unclear which code belongs where
 ```
 
-**PowerCat:**
+**POWERcat:**
 
 ```powershell
-Invoke-PowerCat -s . -o bundle.txt -Recurse -Fence -PowerShell
+Invoke-POWERcat -s . -o bundle.txt -Recurse -Fence -PowerShell
 # Output:
 # --- File: script1.ps1 ---
 # 
@@ -208,7 +181,7 @@ Invoke-PowerCat -s . -o bundle.txt -Recurse -Fence -PowerShell
 | Sorting control | ❌ | ✅ (by name, extension, size, date) |
 | Multiple extensions | ❌ | ✅ (flexible file type selection) |
 
-PowerCat is purpose-built for sharing code with recruiters, collaborators, and LLMs—creating readable, structured, LLM-optimized bundles that respect token limits.
+POWERcat is purpose-built for sharing code with recruiters, collaborators, and LLMs—creating readable, structured, LLM-optimized bundles that respect token limits.
 
 ## 🛸 License
 

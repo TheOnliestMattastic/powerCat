@@ -101,3 +101,21 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - **Module ergonomics:** Removed `-Help` switch from module (PowerShell-idiomatic); users rely on `Get-Help Invoke-PowerCat` for native PowerShell help discovery.
 - **Cross-platform paths:** Added `GetUnresolvedProviderPathFromPSPath` for proper tilde (`~`) and relative path expansion on all platforms.
 
+## Version 1.2.0 (2025-12-17)
+
+### Changed
+
+- **Breaking change:** `-OutputFile` parameter is now optional (was mandatory). Default behavior outputs to stdout, matching Unix `cat` convention.
+- Removed confirmation message from file output (`Write-Host`).
+
+### Added
+
+- **Stdout output:** Invoke-PowerCat now outputs concatenated content to stdout by default, enabling Unix-style piping and redirection.
+  - Example: `Invoke-PowerCat -s ./src | Out-File bundle.txt` (manual redirection)
+  - Example: `Invoke-PowerCat -s ./src -o bundle.txt` (direct file output, optional)
+
+### Fixed
+
+- Fixed `-OutputFile` path expansion to only occur when parameter is provided, preventing erroneous directory resolution on stdout-only invocations.
+- Corrected test suite to validate both stdout and file-output behaviors.
+

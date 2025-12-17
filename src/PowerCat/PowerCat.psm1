@@ -10,7 +10,7 @@ Supports recursion, Markdown code fencing, custom extensions, and sorting.
 Path to the directory containing files.
 
 .PARAMETER OutputFile
-Path to the output text file.
+Path to the output text file. If not specified, output is written to stdout (like Unix cat).
 
 .PARAMETER Recurse
 Include subdirectories.
@@ -92,7 +92,7 @@ function Invoke-PowerCat {
         [Alias("FullName")]
         [string]$SourceDir,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Run")]
+        [Parameter(ParameterSetName = "Run")]
         [Alias("o")]
         [Alias("out")]
         [Alias("output")]
@@ -170,7 +170,9 @@ function Invoke-PowerCat {
 
     # Expand paths (handle ~, relative paths, etc.)
     $SourceDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SourceDir)
-    $OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
+    if ($OutputFile) {
+        $OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
+    }
 
     # Validate SourceDir
     if (-not(Test-Path -Path $SourceDir)) { 
@@ -178,26 +180,28 @@ function Invoke-PowerCat {
         return
     }
 
-    # Validate OutputFile path is writable
-    $OutputDir = Split-Path -Path $OutputFile -Parent
-    if (-not $OutputDir) { $OutputDir = "." }
-    if (-not(Test-Path -Path $OutputDir)) {
-        Write-Error "Output directory '$OutputDir' does not exist."
-        return
-    }
-    if (-not(Test-Path -Path $OutputDir -PathType Container)) {
-        Write-Error "Output path '$OutputDir' is not a directory."
-        return
-    }
+    # Validate OutputFile path is writable (only if OutputFile is specified)
+    if ($OutputFile) {
+        $OutputDir = Split-Path -Path $OutputFile -Parent
+        if (-not $OutputDir) { $OutputDir = "." }
+        if (-not(Test-Path -Path $OutputDir)) {
+            Write-Error "Output directory '$OutputDir' does not exist."
+            return
+        }
+        if (-not(Test-Path -Path $OutputDir -PathType Container)) {
+            Write-Error "Output path '$OutputDir' is not a directory."
+            return
+        }
 
-    # Check if we can write to the output directory
-    try {
-        $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
-        [System.IO.File]::WriteAllText($testFile, "test")
-        Remove-Item -Path $testFile -Force
-    } catch {
-        Write-Error "Output directory '$OutputDir' is not writable: $_"
-        return
+        # Check if we can write to the output directory
+        try {
+            $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
+            [System.IO.File]::WriteAllText($testFile, "test")
+            Remove-Item -Path $testFile -Force
+        } catch {
+            Write-Error "Output directory '$OutputDir' is not writable: $_"
+            return
+        }
     }
 
     # Read catignore patterns
@@ -344,17 +348,21 @@ function Invoke-PowerCat {
         }
     }
 
-    # Write all content at once with UTF-8 encoding (no BOM for cross-platform compatibility)
-    try {
-        $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
-        Write-Host "Concatenation complete. Output saved to $OutputFile"
-    } catch {
-        Write-Error "Failed to write output file '$OutputFile': $_"
-        return
+    # Write to file or stdout based on OutputFile parameter
+    if ($OutputFile) {
+        try {
+            $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
+        } catch {
+            Write-Error "Failed to write output file '$OutputFile': $_"
+            return
+        }
+        
+        # Return the output file object for pipeline support
+        Get-Item -Path $OutputFile
+    } else {
+        # Output to stdout (matching Unix cat behavior)
+        $OutputContent | Write-Output
     }
-    
-    # Return the output file object for pipeline support
-    Get-Item -Path $OutputFile
 }
 # --- Aliases ---
 Set-Alias -Name PowerCat -Value Invoke-PowerCat

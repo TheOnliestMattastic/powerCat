@@ -15,10 +15,10 @@ Describe "PowerCat Module" {
     }
 
     Context "When no files match" {
-        It "Returns gracefully with no crash" {
+        It "Returns gracefully with stdout message" {
             $tempDir = New-Item -ItemType Directory -Path "/tmp/EmptyTest_$([System.Guid]::NewGuid())" -Force
             try {
-                $result = Invoke-PowerCat -s $tempDir.FullName -o "/tmp/out_$([System.Guid]::NewGuid()).txt" 2>&1 | Out-String
+                $result = Invoke-PowerCat -s $tempDir.FullName 2>&1 | Out-String
                 $result | Should -Match "No matching"
             }
             finally {
@@ -284,9 +284,9 @@ function HelloWorld {
         }
     }
 
-    Context "Pipeline support" {
+    Context "Stdout output (no OutputFile)" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatPipelineTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path /tmp "PowerCatStdoutTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "test.md") -Value "Test Content"
         }
@@ -295,32 +295,49 @@ function HelloWorld {
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
         }
 
-        It "Accepts pipeline input from string path" {
-            $outFile = Join-Path /tmp "pipe_string_$([System.Guid]::NewGuid()).txt"
+        It "Outputs to stdout when no OutputFile specified" {
+            $result = Invoke-PowerCat -s $tempDir -e ".md" 2>&1 | Out-String
+            $result | Should -Match "Test Content"
+            $result | Should -Match "--- File: test\.md ---"
+        }
+
+        It "Accepts pipeline input from string path and outputs to stdout" {
+            $result = $tempDir | Invoke-PowerCat -e ".md" 2>&1 | Out-String
+            $result | Should -Match "Test Content"
+        }
+
+        It "Accepts pipeline input from directory object and outputs to stdout" {
+            $dirObj = Get-Item $tempDir
+            $result = $dirObj | Invoke-PowerCat -e ".md" 2>&1 | Out-String
+            $result | Should -Match "Test Content"
+        }
+
+        It "Can pipe stdout to Out-File for redirection" {
+            $outFile = Join-Path /tmp "pipe_redirect_$([System.Guid]::NewGuid()).txt"
             try {
-                $result = $tempDir | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
-                $result | Should -Not -BeNullOrEmpty
-                $result.Name | Should -Match "pipe_string"
+                Invoke-PowerCat -s $tempDir -e ".md" 2>&1 | Out-File -Path $outFile -Encoding UTF8
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "Test Content"
             }
             finally {
                 Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
             }
         }
+    }
 
-        It "Accepts pipeline input from directory object" {
-            $outFile = Join-Path /tmp "pipe_obj_$([System.Guid]::NewGuid()).txt"
-            try {
-                $dirObj = Get-Item $tempDir
-                $result = $dirObj | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
-                $result | Should -Not -BeNullOrEmpty
-                $result.Name | Should -Match "pipe_obj"
-            }
-            finally {
-                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
-            }
+    Context "File output (with OutputFile)" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatFileOutputTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "test.md") -Value "Test Content"
         }
 
-        It "Returns FileInfo object for pipeline output" {
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Returns FileInfo object when OutputFile specified" {
             $outFile = Join-Path /tmp "pipe_output_$([System.Guid]::NewGuid()).txt"
             try {
                 $result = Invoke-PowerCat -s $tempDir -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
@@ -336,6 +353,31 @@ function HelloWorld {
             $outFile = Join-Path /tmp "pipe_chain_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" | Get-Content -Raw | Should -Match "Test Content"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Accepts pipeline input from string path with OutputFile" {
+            $outFile = Join-Path /tmp "pipe_string_$([System.Guid]::NewGuid()).txt"
+            try {
+                $result = $tempDir | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
+                $result | Should -Not -BeNullOrEmpty
+                $result.Name | Should -Match "pipe_string"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Accepts pipeline input from directory object with OutputFile" {
+            $outFile = Join-Path /tmp "pipe_obj_$([System.Guid]::NewGuid()).txt"
+            try {
+                $dirObj = Get-Item $tempDir
+                $result = $dirObj | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
+                $result | Should -Not -BeNullOrEmpty
+                $result.Name | Should -Match "pipe_obj"
             }
             finally {
                 Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue

@@ -519,15 +519,17 @@ function HelloWorld {
 
     Context "Error handling and Help" {
         It "Errors when SourceDir does not exist" {
-            $nonexistent = Join-Path /tmp "NoSuchDir_$([System.Guid]::NewGuid())"
+            $tempPath = [System.IO.Path]::GetTempPath()
+            $nonexistent = Join-Path $tempPath "NoSuchDir_$([System.Guid]::NewGuid())" 
             $result = Invoke-PowerCat -s $nonexistent 2>&1 | Out-String
             $result | Should -Match "not found"
         }
 
         It "Errors when output directory does not exist" {
-            $src = Join-Path /tmp "PowerCatHelpSrc_$([System.Guid]::NewGuid())"
+            $tempPath = [System.IO.Path]::GetTempPath()
+            $src = Join-Path $tempPath "PowerCatHelpSrc_$([System.Guid]::NewGuid())" 
             New-Item -ItemType Directory -Path $src -Force | Out-Null
-            $badOut = Join-Path "/tmp/NoSuchOutDir_$([System.Guid]::NewGuid())" "out.txt"
+            $badOut = Join-Path $tempPath "NoSuchOutDir_$([System.Guid]::NewGuid())" "out.txt"
             try {
                 $result = Invoke-PowerCat -s $src -o $badOut 2>&1 | Out-String
                 $result | Should -Match "does not exist"
@@ -538,10 +540,11 @@ function HelloWorld {
         }
 
         It "Errors when output path parent exists but is a file (not a directory)" {
-            $src = Join-Path /tmp "PowerCatHelpSrc2_$([System.Guid]::NewGuid())"
+            $tempPath = [System.IO.Path]::GetTempPath()
+            $src = Join-Path $tempPath "PowerCatHelpSrc2_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $src -Force | Out-Null
 
-            $fileAsDir = Join-Path /tmp "fileAsDir_$([System.Guid]::NewGuid())"
+            $fileAsDir = Join-Path $tempPath "fileAsDir_$([System.Guid]::NewGuid())"
             Set-Content -Path $fileAsDir -Value "I am a file"
             $outPath = Join-Path $fileAsDir "child.txt"  # parent is a file, not a directory
 

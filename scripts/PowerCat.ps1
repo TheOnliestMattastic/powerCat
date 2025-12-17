@@ -28,22 +28,23 @@
 #                                presents,
 #
 #                                PowerCat:
-#                       A single‑shot concatenator 
+#                       A single-shot concatenator 
 #        for bundling markdown and code into one clean text file. 
 # --------------------------------------------------------------------------
 <#
 .SYNOPSIS
-Concatenate files from a source directory into a single output file.
+Concatenate files from a source directory to stdout or output file.
 
 .DESCRIPTION
 PowerCat is a single-shot concatenator for bundling markdown and code into one clean text file.
-Supports recursion, Markdown code fencing, custom extensions, and sorting.
+Outputs to stdout by default (Unix cat style); optional file writing via -OutputFile.
+Supports recursion, Markdown code fencing, custom extensions, sorting, minification, and token estimation.
 
 .PARAMETER SourceDir
 Path to the directory containing files.
 
 .PARAMETER OutputFile
-Path to the output text file.
+Path to the output text file (optional). If not specified, output streams to stdout.
 
 .PARAMETER Recurse
 Include subdirectories.
@@ -62,7 +63,7 @@ Include .sh files.
 Include .html files.
 
 .PARAMETER Lua
-Include .Lua files.
+Include .lua files.
 
 .PARAMETER CSS
 Include .css files.
@@ -92,17 +93,24 @@ Remove comments and blank lines from output (strips lines starting with # or // 
 .PARAMETER HeaderFormat
 Format for file headers: Markdown (default), JSON, or YAML.
 
-.EXAMPLE
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
-Concatenates .md files from C:\Project into bundle.txt.
+.PARAMETER Stats
+Display statistics: file count, character count, and estimated token usage (for AI context planning).
 
 .EXAMPLE
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -r -f
-Recursively concatenates .md files and wraps them in Markdown fences.
+.\PowerCat.ps1 -s "C:\Project"
+Outputs .md files to stdout (pipe to Out-File for file output).
 
 .EXAMPLE
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -b -p -sort Extension
-Includes Bash and PowerShell files, sorted by extension.
+.\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
+Writes .md files to bundle.txt.
+
+.EXAMPLE
+.\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -f -p
+Recursively concatenates .ps1 files with Markdown fences, writes to bundle.txt.
+
+.EXAMPLE
+.\PowerCat.ps1 -s "C:\Project" -st
+Displays file count, character count, and estimated token usage.
 
 .NOTES
 Author: Matthew Poole Chicano
@@ -112,7 +120,7 @@ License: GPL v3.0
 https://github.com/TheOnliestMattastic/PowerCat
 
 .LINK
-https://theonliestmattastic.github.io/ 
+https://theonliestmattastic.github.io/
 #>
 
 param (
@@ -124,7 +132,7 @@ param (
     [Alias("FullName")]
     [string]$SourceDir,
 
-    [Parameter(Mandatory = $true, ParameterSetName = "Run")]
+    [Parameter(ParameterSetName = "Run")]
     [Alias("o")]
     [Alias("out")]
     [Alias("output")]
@@ -193,7 +201,10 @@ param (
 
     [Alias("hf")]
     [ValidateSet("Markdown", "JSON", "YAML")]
-    [string]$HeaderFormat = "Markdown"
+    [string]$HeaderFormat = "Markdown",
+
+    [Alias("sta")]
+    [switch]$Stats
 )
 
 # Extend $Extensions based on switches
@@ -203,21 +214,23 @@ if ($CSS) { $Extensions += ".css" }
 if ($Powershell) { $Extensions += ".ps1" }
 if ($Lua) { $Extensions += ".lua" }
 
-# man-page
+# Man-page help
 if ($Help) {
     Write-Output @"
 PowerCat.ps1 — A single-shot concatenator for bundling markdown and code
 
 USAGE:
-    .\PowerCat.ps1 -s   <SourceDir> -o <OutputFile> [options]
+    .\PowerCat.ps1 -s <SourceDir> [-o <OutputFile>] [options]
 
 REQUIRED PARAMETERS:
     -s, -SourceDir      Path to the directory containing files
-    -o, -OutputFile     Path to the output text file
+
+OPTIONAL PARAMETERS:
+    -o, -OutputFile     Path to the output text file (default: stdout)
 
 OPTIONS:
     -r, -Recurse        Include subdirectories
-    -f, -Fence          Wrap file contents in Markdown code fences (i.e., '```')
+    -f, -Fence          Wrap file contents in Markdown code fences
     -e, -Extensions     Specify extensions (default: .md)
                         Example: -e ".ps1",".json",".sh"
     -st, -Sort          Sort by Name, Extension, LastWriteTime, or Length
@@ -227,6 +240,7 @@ OPTIONS:
     -max, -MaxSize      Exclude files larger than this size in bytes
     -mini, -Minify      Remove comments and blank lines from output
     -hf, -HeaderFormat  Header format: Markdown (default), JSON, or YAML
+    -sta, -Stats        Display file count, character count, and token estimate
     
     -b, -Bash           Include .sh files
     -c, -CSS            Include .css files
@@ -237,20 +251,25 @@ OPTIONS:
     -h, -Help           Show this help message
 
 EXAMPLES:
+    .\PowerCat.ps1 -s "C:\Project"
     .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
-    .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -l
-    .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -e ".ps1",".json"
+    .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -f -p
+    .\PowerCat.ps1 -s "C:\Project" -sta
 
 DESCRIPTION:
-    PowerCat collects files by extension and concatenates them into a
-    single text file. Useful for sharing code with LLMs, recruiters,
-    or collaborators. Supports Markdown formatting for readability.
+    PowerCat collects files by extension and concatenates them. Outputs to
+    stdout by default (Unix cat style); pipe to Out-File for redirection.
+    Supports Markdown formatting, code fencing, minification, and token
+    estimation for LLM integration.
 "@
     return
 }
+
 # Expand paths (handle ~, relative paths, etc.)
 $SourceDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SourceDir)
-$OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
+if ($OutputFile) {
+    $OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
+}
 
 # Validate SourceDir
 if (-not(Test-Path -Path $SourceDir)) { 
@@ -258,26 +277,28 @@ if (-not(Test-Path -Path $SourceDir)) {
     exit 1
 }
 
-# Validate OutputFile path is writable
-$OutputDir = Split-Path -Path $OutputFile -Parent
-if (-not $OutputDir) { $OutputDir = "." }
-if (-not(Test-Path -Path $OutputDir)) {
-    Write-Error "Output directory '$OutputDir' does not exist."
-    exit 1
-}
-if (-not(Test-Path -Path $OutputDir -PathType Container)) {
-    Write-Error "Output path '$OutputDir' is not a directory."
-    exit 1
-}
+# Validate OutputFile path is writable (only if OutputFile is specified)
+if ($OutputFile) {
+    $OutputDir = Split-Path -Path $OutputFile -Parent
+    if (-not $OutputDir) { $OutputDir = "." }
+    if (-not(Test-Path -Path $OutputDir)) {
+        Write-Error "Output directory '$OutputDir' does not exist."
+        exit 1
+    }
+    if (-not(Test-Path -Path $OutputDir -PathType Container)) {
+        Write-Error "Output path '$OutputDir' is not a directory."
+        exit 1
+    }
 
-# Check if we can write to the output directory
-try {
-    $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
-    [System.IO.File]::WriteAllText($testFile, "test")
-    Remove-Item -Path $testFile -Force
-} catch {
-    Write-Error "Output directory '$OutputDir' is not writable: $_"
-    exit 1
+    # Check if we can write to the output directory
+    try {
+        $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
+        [System.IO.File]::WriteAllText($testFile, "test")
+        Remove-Item -Path $testFile -Force
+    } catch {
+        Write-Error "Output directory '$OutputDir' is not writable: $_"
+        exit 1
+    }
 }
 
 # Read catignore patterns
@@ -358,7 +379,7 @@ $Files = $Files | Where-Object {
 
 if ($Files.Count -eq 0) {
     Write-Output "No matching text files found in $SourceDir"
-    return
+    exit 0
 }
 
 switch ($Sort) {
@@ -421,14 +442,32 @@ foreach ($file in $Files) {
     }
 }
 
-# Write all content at once with UTF-8 encoding (no BOM for cross-platform compatibility)
-try {
-    $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
-    Write-Host "Concatenation complete. Output saved to $OutputFile"
-} catch {
-    Write-Error "Failed to write output file '$OutputFile': $_"
-    exit 1
+# Calculate stats if requested
+if ($Stats) {
+    $outputText = $OutputContent -join "`n"
+    $charCount = $outputText.Length
+    # Token estimation: ~4 characters per token (varies by model; GPT-3.5/4 use this baseline)
+    $estimatedTokens = [Math]::Ceiling($charCount / 4)
+    
+    Write-Output "=== PowerCat Statistics ==="
+    Write-Output "Files processed:     $($Files.Count)"
+    Write-Output "Total characters:    $charCount"
+    Write-Output "Estimated tokens:    $estimatedTokens (4 chars/token baseline)"
+    Write-Output "==========================="
 }
 
-# Return the output file object for pipeline support
-Get-Item -Path $OutputFile
+# Write to file or stdout based on OutputFile parameter
+if ($OutputFile) {
+    try {
+        $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
+    } catch {
+        Write-Error "Failed to write output file '$OutputFile': $_"
+        exit 1
+    }
+    
+    # Return the output file object for pipeline support
+    Get-Item -Path $OutputFile
+} else {
+    # Output to stdout (matching Unix cat behavior)
+    $OutputContent | Write-Output
+}

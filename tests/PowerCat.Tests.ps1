@@ -520,18 +520,18 @@ function HelloWorld {
     Context "Error handling and Help" {
         It "Errors when SourceDir does not exist" {
             $tempPath = [System.IO.Path]::GetTempPath()
-            $nonexistent = Join-Path $tempPath "NoSuchDir_$([System.Guid]::NewGuid())" 
-            $result = Invoke-PowerCat -s $nonexistent 2>&1 | Out-String
+            $nonexistent = Join-Path $tempPath "NoSuchDir_$([System.Guid]::NewGuid())"
+            $result = Invoke-PowerCat -s $nonexistent -ErrorAction Continue 2>&1 | Out-String
             $result | Should -Match "not found"
         }
 
         It "Errors when output directory does not exist" {
             $tempPath = [System.IO.Path]::GetTempPath()
-            $src = Join-Path $tempPath "PowerCatHelpSrc_$([System.Guid]::NewGuid())" 
+            $src = Join-Path $tempPath "PowerCatHelpSrc_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $src -Force | Out-Null
             $badOut = Join-Path $tempPath "NoSuchOutDir_$([System.Guid]::NewGuid())" "out.txt"
             try {
-                $result = Invoke-PowerCat -s $src -o $badOut 2>&1 | Out-String
+                $result = Invoke-PowerCat -s $src -o $badOut -ErrorAction Continue 2>&1 | Out-String
                 $result | Should -Match "does not exist"
             }
             finally {
@@ -549,7 +549,7 @@ function HelloWorld {
             $outPath = Join-Path $fileAsDir "child.txt"  # parent is a file, not a directory
 
             try {
-                $result = Invoke-PowerCat -s $src -o $outPath 2>&1 | Out-String
+                $result = Invoke-PowerCat -s $src -o $outPath -ErrorAction Continue 2>&1 | Out-String
                 $result | Should -Match "is not a directory"
             }
             finally {

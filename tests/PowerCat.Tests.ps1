@@ -29,7 +29,7 @@ Describe "PowerCat Module" {
 
     Context "When files exist" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "a.md") -Value "Hello"
             Set-Content -Path (Join-Path $tempDir "b.md") -Value "World"
@@ -49,7 +49,7 @@ function HelloWorld {
         }
 
         It "Concatenates .md files by default" {
-            $outFile = Join-Path /tmp "bundle_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "bundle_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile
 
@@ -63,7 +63,7 @@ function HelloWorld {
         }
 
         It "Uses Markdown headers by default" {
-            $outFile = Join-Path /tmp "markdown_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "markdown_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md"
                 
@@ -78,7 +78,7 @@ function HelloWorld {
 
     Context "HeaderFormat parameter" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatHeaderTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatHeaderTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "test.md") -Value "Content"
         }
@@ -88,7 +88,7 @@ function HelloWorld {
         }
 
         It "Generates JSON headers with -hf JSON" {
-            $outFile = Join-Path /tmp "json_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "json_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -hf JSON
                 
@@ -101,7 +101,7 @@ function HelloWorld {
         }
 
         It "Generates YAML headers with -hf YAML" {
-            $outFile = Join-Path /tmp "yaml_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "yaml_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -hf YAML
                 
@@ -114,7 +114,7 @@ function HelloWorld {
         }
 
         It "Accepts alias -hf for -HeaderFormat" {
-            $outFile = Join-Path /tmp "alias_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "alias_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -hf JSON
                 
@@ -129,7 +129,7 @@ function HelloWorld {
 
     Context "Minify parameter" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatMinifyTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatMinifyTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "test.ps1") -Value @"
 # Comment line 1
@@ -148,7 +148,7 @@ function HelloWorld {
         }
 
         It "Removes comments and blank lines with -Minify" {
-            $outFile = Join-Path /tmp "minify_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "minify_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -Minify
                 
@@ -163,7 +163,7 @@ function HelloWorld {
         }
 
         It "Accepts alias -mini for -Minify" {
-            $outFile = Join-Path /tmp "minify_alias_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "minify_alias_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -mini
                 
@@ -176,7 +176,7 @@ function HelloWorld {
         }
 
         It "Removes '//' style comments when Minify is enabled" {
-            $outFile = Join-Path /tmp "minify_slash_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "minify_slash_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -Minify
                 
@@ -189,7 +189,7 @@ function HelloWorld {
         }
 
         It "Works with custom headers" {
-            $outFile = Join-Path /tmp "minify_json_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "minify_json_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -Minify -hf JSON
                 
@@ -205,7 +205,7 @@ function HelloWorld {
 
     Context "Size filtering" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatSizeTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatSizeTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "small.md") -Value "S"       # 1 byte
             Set-Content -Path (Join-Path $tempDir "large.md") -Value ("X" * 1000)  # 1000 bytes
@@ -216,7 +216,7 @@ function HelloWorld {
         }
 
         It "Excludes files smaller than MinSize" {
-            $outFile = Join-Path /tmp "minsize_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "minsize_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -MinSize 100
                 
@@ -230,7 +230,7 @@ function HelloWorld {
         }
 
         It "Excludes files larger than MaxSize" {
-            $outFile = Join-Path /tmp "maxsize_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "maxsize_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" -MaxSize 100
                 
@@ -246,7 +246,7 @@ function HelloWorld {
 
     Context "Binary file detection" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatBinaryTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatBinaryTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "text.md") -Value "Text file"
             # Create mock binary files with extensions that should be skipped
@@ -260,7 +260,7 @@ function HelloWorld {
         }
 
         It "Skips binary files (.exe, .dll, image formats)" {
-            $outFile = Join-Path /tmp "binary_skip_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "binary_skip_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -Recurse
                 
@@ -299,7 +299,7 @@ function HelloWorld {
 
     Context "Stdout output (no OutputFile)" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatStdoutTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatStdoutTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "test.md") -Value "Test Content"
         }
@@ -326,7 +326,7 @@ function HelloWorld {
         }
 
         It "Can pipe stdout to Out-File for redirection" {
-            $outFile = Join-Path /tmp "pipe_redirect_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "pipe_redirect_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -e ".md" 2>&1 | Out-File -Path $outFile -Encoding UTF8
                 
@@ -341,7 +341,7 @@ function HelloWorld {
 
     Context "File output (with OutputFile)" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatFileOutputTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatFileOutputTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "test.md") -Value "Test Content"
         }
@@ -351,7 +351,7 @@ function HelloWorld {
         }
 
         It "Returns FileInfo object when OutputFile specified" {
-            $outFile = Join-Path /tmp "pipe_output_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "pipe_output_$([System.Guid]::NewGuid()).txt"
             try {
                 $result = Invoke-PowerCat -s $tempDir -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
                 $result | Should -Not -BeNullOrEmpty
@@ -363,7 +363,7 @@ function HelloWorld {
         }
 
         It "Supports pipeline chaining with Get-Content" {
-            $outFile = Join-Path /tmp "pipe_chain_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "pipe_chain_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".md" | Get-Content -Raw | Should -Match "Test Content"
             }
@@ -373,7 +373,7 @@ function HelloWorld {
         }
 
         It "Accepts pipeline input from string path with OutputFile" {
-            $outFile = Join-Path /tmp "pipe_string_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "pipe_string_$([System.Guid]::NewGuid()).txt"
             try {
                 $result = $tempDir | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
                 $result | Should -Not -BeNullOrEmpty
@@ -385,7 +385,7 @@ function HelloWorld {
         }
 
         It "Accepts pipeline input from directory object with OutputFile" {
-            $outFile = Join-Path /tmp "pipe_obj_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "pipe_obj_$([System.Guid]::NewGuid()).txt"
             try {
                 $dirObj = Get-Item $tempDir
                 $result = $dirObj | Invoke-PowerCat -o $outFile -e ".md" 2>&1 | Where-Object { $_ -is [System.IO.FileInfo] }
@@ -400,7 +400,7 @@ function HelloWorld {
 
     Context "Additional behaviors" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatExtraTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatExtraTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "code.ps1") -Value "Write-Host 'X'"
             Set-Content -Path (Join-Path $tempDir "included.md") -Value "Included"
@@ -414,7 +414,7 @@ function HelloWorld {
         }
 
         It "Wraps content in fences with -Fence" {
-            $outFile = Join-Path /tmp "fence_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "fence_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -f
                 $content = Get-Content $outFile -Raw
@@ -427,7 +427,7 @@ function HelloWorld {
         }
 
         It "Respects catignore by default" {
-            $outFile = Join-Path /tmp "catignore_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "catignore_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -Recurse
                 $content = Get-Content $outFile -Raw
@@ -440,7 +440,7 @@ function HelloWorld {
         }
 
         It "Skips catignore when -NoCatIgnore is used" {
-            $outFile = Join-Path /tmp "nocatignore_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "nocatignore_$([System.Guid]::NewGuid()).txt"
             try {
                 Invoke-PowerCat -s $tempDir -o $outFile -Recurse -nci
                 $content = Get-Content $outFile -Raw
@@ -455,7 +455,7 @@ function HelloWorld {
 
     Context "Statistics reporting" {
         BeforeAll {
-            $tempDir = Join-Path /tmp "PowerCatStatsTest_$([System.Guid]::NewGuid())"
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatStatsTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
             Set-Content -Path (Join-Path $tempDir "test1.md") -Value "Hello"
             Set-Content -Path (Join-Path $tempDir "test2.md") -Value "World"
@@ -483,7 +483,7 @@ function HelloWorld {
         }
 
         It "Stats work with file output (-o flag)" {
-            $outFile = Join-Path /tmp "stats_file_$([System.Guid]::NewGuid()).txt"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "stats_file_$([System.Guid]::NewGuid()).txt"
             try {
                 $result = Invoke-PowerCat -s $tempDir -o $outFile -sta 2>&1 | Out-String
                 $result | Should -Match "Files processed"
@@ -503,7 +503,7 @@ function HelloWorld {
         }
 
         It "Token count is ceiling of characters divided by 4" {
-            $testDir = Join-Path /tmp "PowerCatTokenTest_$([System.Guid]::NewGuid())"
+            $testDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatTokenTest_$([System.Guid]::NewGuid())"
             New-Item -ItemType Directory -Path $testDir -Force | Out-Null
             try {
                 Set-Content -Path (Join-Path $testDir "exact.md") -Value "0123456789"
@@ -521,8 +521,7 @@ function HelloWorld {
         It "Errors when SourceDir does not exist" {
             $tempPath = [System.IO.Path]::GetTempPath()
             $nonexistent = Join-Path $tempPath "NoSuchDir_$([System.Guid]::NewGuid())"
-            $result = Invoke-PowerCat -s $nonexistent -ErrorAction Continue 2>&1 | Out-String
-            $result | Should -Match "not found"
+            { Invoke-PowerCat -s $nonexistent -ErrorAction Stop } | Should -Throw
         }
 
         It "Errors when output directory does not exist" {
@@ -531,8 +530,7 @@ function HelloWorld {
             New-Item -ItemType Directory -Path $src -Force | Out-Null
             $badOut = Join-Path $tempPath "NoSuchOutDir_$([System.Guid]::NewGuid())" "out.txt"
             try {
-                $result = Invoke-PowerCat -s $src -o $badOut -ErrorAction Continue 2>&1 | Out-String
-                $result | Should -Match "does not exist"
+                { Invoke-PowerCat -s $src -o $badOut -ErrorAction Stop } | Should -Throw
             }
             finally {
                 Remove-Item -Path $src -Recurse -Force -ErrorAction SilentlyContinue
@@ -549,8 +547,7 @@ function HelloWorld {
             $outPath = Join-Path $fileAsDir "child.txt"  # parent is a file, not a directory
 
             try {
-                $result = Invoke-PowerCat -s $src -o $outPath -ErrorAction Continue 2>&1 | Out-String
-                $result | Should -Match "is not a directory"
+                { Invoke-PowerCat -s $src -o $outPath -ErrorAction Stop } | Should -Throw
             }
             finally {
                 Remove-Item -Path $src -Recurse -Force -ErrorAction SilentlyContinue

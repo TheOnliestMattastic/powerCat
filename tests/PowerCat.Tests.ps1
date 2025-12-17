@@ -136,6 +136,7 @@ function HelloWorld {
 function HelloWorld {
     # Comment inside function
     Write-Host "Hello"
+    // js-style comment
 }
 
 # Comment line 2
@@ -168,6 +169,19 @@ function HelloWorld {
                 
                 $content = Get-Content $outFile
                 $content | Should -Not -Match "# Comment"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Removes '//' style comments when Minify is enabled" {
+            $outFile = Join-Path /tmp "minify_slash_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -Minify
+                
+                $content = Get-Content $outFile -Raw
+                $content | Should -Not -Match "^//"
             }
             finally {
                 Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
@@ -252,7 +266,6 @@ function HelloWorld {
                 
                 $content = Get-Content $outFile -Raw
                 $content | Should -Match "Text file"
-                # Should not contain binary file indicators or errors
                 { $content | Should -Not -Match "Cannot process binary file" } | Should -Not -Throw
             }
             finally {
@@ -381,6 +394,164 @@ function HelloWorld {
             }
             finally {
                 Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Additional behaviors" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatExtraTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "code.ps1") -Value "Write-Host 'X'"
+            Set-Content -Path (Join-Path $tempDir "included.md") -Value "Included"
+            Set-Content -Path (Join-Path $tempDir "secret.md") -Value "Secret"
+            # catignore will exclude secret.md
+            Set-Content -Path (Join-Path $tempDir "catignore") -Value "secret.md"
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Wraps content in fences with -Fence" {
+            $outFile = Join-Path /tmp "fence_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -e ".ps1" -f
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "```ps1"
+                $content | Should -Match "```\s*$"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Respects catignore by default" {
+            $outFile = Join-Path /tmp "catignore_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -Recurse
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "Included"
+                $content | Should -Not -Match "Secret"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Skips catignore when -NoCatIgnore is used" {
+            $outFile = Join-Path /tmp "nocatignore_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat -s $tempDir -o $outFile -Recurse -nci
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "Included"
+                $content | Should -Match "Secret"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Statistics reporting" {
+        BeforeAll {
+            $tempDir = Join-Path /tmp "PowerCatStatsTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "test1.md") -Value "Hello"
+            Set-Content -Path (Join-Path $tempDir "test2.md") -Value "World"
+        }
+
+        AfterAll {
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It "Displays file count in stats output" {
+            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result | Should -Match "Files processed"
+            $result | Should -Match "\b2\b"
+        }
+
+        It "Displays character count in stats output" {
+            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result | Should -Match "Total characters"
+        }
+
+        It "Displays token estimation in stats output" {
+            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result | Should -Match "Estimated tokens"
+            $result | Should -Match "4 chars/token"
+        }
+
+        It "Stats work with file output (-o flag)" {
+            $outFile = Join-Path /tmp "stats_file_$([System.Guid]::NewGuid()).txt"
+            try {
+                $result = Invoke-PowerCat -s $tempDir -o $outFile -sta 2>&1 | Out-String
+                $result | Should -Match "Files processed"
+                $result | Should -Match "Total characters"
+                
+                Test-Path $outFile | Should -Be $true
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Stats work with stdout (no -o flag)" {
+            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result | Should -Match "PowerCat Statistics"
+            $result | Should -Match "Hello|World"
+        }
+
+        It "Token count is ceiling of characters divided by 4" {
+            $testDir = Join-Path /tmp "PowerCatTokenTest_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $testDir -Force | Out-Null
+            try {
+                Set-Content -Path (Join-Path $testDir "exact.md") -Value "0123456789"
+                
+                $result = Invoke-PowerCat -s $testDir -e ".md" -sta 2>&1 | Out-String
+                $result | Should -Match "Estimated tokens:\s+\d+"
+            }
+            finally {
+                Remove-Item -Path $testDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Error handling and Help" {
+        It "Errors when SourceDir does not exist" {
+            $nonexistent = Join-Path /tmp "NoSuchDir_$([System.Guid]::NewGuid())"
+            $result = Invoke-PowerCat -s $nonexistent 2>&1 | Out-String
+            $result | Should -Match "not found"
+        }
+
+        It "Errors when output directory does not exist" {
+            $src = Join-Path /tmp "PowerCatHelpSrc_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $src -Force | Out-Null
+            $badOut = Join-Path "/tmp/NoSuchOutDir_$([System.Guid]::NewGuid())" "out.txt"
+            try {
+                $result = Invoke-PowerCat -s $src -o $badOut 2>&1 | Out-String
+                $result | Should -Match "does not exist"
+            }
+            finally {
+                Remove-Item -Path $src -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Errors when output path parent exists but is a file (not a directory)" {
+            $src = Join-Path /tmp "PowerCatHelpSrc2_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $src -Force | Out-Null
+
+            $fileAsDir = Join-Path /tmp "fileAsDir_$([System.Guid]::NewGuid())"
+            Set-Content -Path $fileAsDir -Value "I am a file"
+            $outPath = Join-Path $fileAsDir "child.txt"  # parent is a file, not a directory
+
+            try {
+                $result = Invoke-PowerCat -s $src -o $outPath 2>&1 | Out-String
+                $result | Should -Match "is not a directory"
+            }
+            finally {
+                Remove-Item -Path $src -Recurse -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path $fileAsDir -Force -ErrorAction SilentlyContinue
             }
         }
     }

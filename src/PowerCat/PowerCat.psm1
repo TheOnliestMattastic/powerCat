@@ -59,6 +59,9 @@ Remove comments and blank lines from output (strips lines starting with # or // 
 .PARAMETER HeaderFormat
 Format for file headers: Markdown (default), JSON, or YAML.
 
+.PARAMETER Stats
+Display statistics: file count, character count, and estimated token usage (for AI context planning).
+
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
 Concatenates .md files from C:\Project into bundle.txt.
@@ -70,6 +73,10 @@ Recursively concatenates .md files and wraps them in Markdown fences.
 .EXAMPLE
 Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -b -p -sort Extension
 Includes Bash and PowerShell files, sorted by extension.
+
+.EXAMPLE
+Invoke-PowerCat -s "C:\Project" -sta
+Displays file count, character count, and estimated token usage (useful for AI context planning).
 
 .NOTES
 Author: Matthew Poole Chicano
@@ -157,7 +164,10 @@ function Invoke-PowerCat {
 
         [Alias("hf")]
         [ValidateSet("Markdown", "JSON", "YAML")]
-        [string]$HeaderFormat = "Markdown"
+        [string]$HeaderFormat = "Markdown",
+
+        [Alias("sta")]
+        [switch]$Stats
     )
 
     # Extend $Extensions based on switches
@@ -346,6 +356,20 @@ function Invoke-PowerCat {
         if (-not $Minify) {
             $OutputContent += ""
         }
+    }
+
+    # Calculate stats if requested
+    if ($Stats) {
+        $outputText = $OutputContent -join "`n"
+        $charCount = $outputText.Length
+        # Token estimation: ~4 characters per token (varies by model; GPT-3.5/4 use this baseline)
+        $estimatedTokens = [Math]::Ceiling($charCount / 4)
+        
+        Write-Output "=== PowerCat Statistics ==="
+        Write-Output "Files processed:     $($Files.Count)"
+        Write-Output "Total characters:    $charCount"
+        Write-Output "Estimated tokens:    $estimatedTokens (4 chars/token baseline)"
+        Write-Output "==========================="
     }
 
     # Write to file or stdout based on OutputFile parameter

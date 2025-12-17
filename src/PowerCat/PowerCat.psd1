@@ -3,7 +3,7 @@
     RootModule        = 'PowerCat.psm1'
 
     # Version number of this module
-    ModuleVersion     = '1.1.2'
+    ModuleVersion     = '1.2.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop','Core')
@@ -21,7 +21,7 @@
     Copyright         = '(c) 2025 Matthew Poole Chicano. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'PowerCat is a single-shot concatenator that bundles markdown and code files into one text file. Supports recursion, Markdown formatting, custom extensions, and sorting.'
+    Description       = 'PowerCat is a single-shot concatenator that bundles markdown and code files into one text file. Outputs to stdout (Unix cat-style) or file. Supports recursion, Markdown fencing, custom extensions, sorting, minification, and token estimation for AI context planning.'
 
     # Minimum version of the PowerShell engine required
     PowerShellVersion = '5.1'
@@ -44,7 +44,7 @@
         PSData = @{
 
             # Tags applied to this module for discovery
-            Tags = @('Concatenate','Utility','Markdown','DevTools', 'PowerShell', 'CodeBundler', 'Textfile', 'Documentation', "LLM")
+            Tags = @('Concatenate','Utility','Markdown','DevTools','PowerShell','CodeBundler','Textfile','Documentation','LLM','TokenCounter','AIContext')
 
             # A URL to the license for this module
             LicenseUri = 'https://www.gnu.org/licenses/gpl-3.0'
@@ -56,7 +56,7 @@
             IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg'
 
             # Release notes
-            ReleaseNotes = 'Initial release of PowerCat. Supports recursion, Markdown, custom extensions, and sorting.'
+            ReleaseNotes = 'v1.2.0: Stdout output by default (Unix cat-style), optional file output, token estimation for AI context planning. See https://github.com/TheOnliestMattastic/PowerCat/blob/main/ReleaseNotes.md'
         }
     }
 }

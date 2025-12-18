@@ -182,16 +182,17 @@ Invoke-PowerCat -s . -Recurse -Fence -PowerShell
 # Output:
 # --- File: script1.ps1 ---
 # 
-# ```ps1
+# '''ps1
 # function HelloWorld { Write-Host "Hello" }
-# ```
-# 
+# '''
+#
 # --- File: script2.ps1 ---
-# 
-# ```ps1
+#
+# '''ps1
 # function GoodbyeWorld { Write-Host "Goodbye" }
-# ```
+# '''
 ```
+
 
 **The difference:**
 

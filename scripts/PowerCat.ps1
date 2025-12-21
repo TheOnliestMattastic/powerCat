@@ -328,7 +328,13 @@ if ($OutputFile) {
 
   # If output file exists and ForceOverwrite specified, attempt to remove it
   if ($OutputFile -and (Test-Path -Path $OutputFile) -and $ForceOverwrite) {
-    try { Remove-Item -Path $OutputFile -Force -ErrorAction Stop } catch { }
+    try {
+      Remove-Item -Path $OutputFile -Force -ErrorAction Stop
+    }
+    catch {
+      Write-Error "Failed to remove existing output file '$OutputFile' even with -ForceOverwrite. Error: $_"
+      exit 1
+    }
   }
 }
 

@@ -70,11 +70,35 @@ Get-Help Invoke-POWERcat -Examples
 
 See POWERcat in action:
 
-- **![demo-help](assets/demo-help.mp4)** — Display the man-page style help with the `-h` flag
-- **![demo-stdout](assets/demo-stdout.mp4)** — Bundle files with `-Stats` and output to stdout with character and token counts
-- **![demo-txt](assets/demo-txt.mp4)** — Write bundled files to `.txt`, verify the file exists, and view output with `nano`
-- **![demo-bat](assets/demo-bat.mp4)** — Pipe bundled bash files to `bat` for shell syntax highlighting
-- **![demo-lolcat](assets/demo-lolcat.mp4)** — Pipe bundled output to `lolcat` for rainbow terminal fun
+### Display help with the `-h` flag
+<video width="100%" controls>
+  <source src="assets/demo-help.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### Bundle files with `-Stats` and output to stdout
+<video width="100%" controls>
+  <source src="assets/demo-stdout.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### Write bundled files to `.txt` and view with `nano`
+<video width="100%" controls>
+  <source src="assets/demo-txt.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### Pipe bundled bash files to `bat` for syntax highlighting
+<video width="100%" controls>
+  <source src="assets/demo-bat.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### Pipe bundled output to `lolcat` for rainbow terminal fun
+<video width="100%" controls>
+  <source src="assets/demo-lolcat.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## 🧪 Examples
 

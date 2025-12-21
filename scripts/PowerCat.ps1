@@ -372,14 +372,14 @@ if ($Recurse) {
   $getChildItemParams['Recurse'] = $true
 }
 
-$Files = @(Get-ChildItem @getChildItemParams) | 
-Where-Object { $Extensions -contains $_.Extension }
-
 # If no extensions selected, return early with a helpful message
 if ($Extensions.Count -eq 0) {
   Write-Error "No extensions selected. Use -Extensions, -IncludeMarkdown, or switches like -PowerShell to select file types."
   exit 1
 }
+
+$Files = @(Get-ChildItem @getChildItemParams) | 
+Where-Object { $Extensions -contains $_.Extension }
 # Filter out ignored files and by size
 if ($IgnorePatterns.Count -gt 0 -or $MinSize -gt 0 -or $MaxSize -gt 0) {
   $Files = $Files | Where-Object {

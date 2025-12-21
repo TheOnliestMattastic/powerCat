@@ -377,7 +377,7 @@ Where-Object { $Extensions -contains $_.Extension }
 
 # If no extensions selected, return early with a helpful message
 if ($Extensions.Count -eq 0) {
-  Write-Warning "No extensions selected. Use -Extensions, -IncludeMarkdown, or switches like -PowerShell to select file types."
+  Write-Error "No extensions selected. Use -Extensions, -IncludeMarkdown, or switches like -PowerShell to select file types."
   exit 1
 }
 # Filter out ignored files and by size

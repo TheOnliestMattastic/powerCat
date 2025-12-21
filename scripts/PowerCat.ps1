@@ -216,16 +216,11 @@ if ($Powershell) { $Extensions += ".ps1" }
 if ($Lua) { $Extensions += ".lua" }
 if ($IncludeMarkdown) { $Extensions += ".md" }
 
-# Allow comma-separated single string entries in -Extensions
-$Extensions = $Extensions | ForEach-Object {
-  if ($_ -is [string] -and $_ -like "*,*") {
-    ($_ -split ',') | ForEach-Object { $_.Trim() }
-  }
-  else {
-    $_
-  }
-}
-$Extensions = $Extensions | Where-Object { $_ } | Select-Object -Unique
+# Parse comma-separated extensions
+$Extensions = ($Extensions -join ',') -split ',' |
+              ForEach-Object { $_.Trim() } |
+              Where-Object { $_ } |
+              Select-Object -Unique
 
 # Normalize excluded extensions and remove them
 if ($ExcludeExtensions.Count -gt 0) {

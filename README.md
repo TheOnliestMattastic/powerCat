@@ -13,6 +13,8 @@
 **PowerCat** is a single-shot concatenator for bundling markdown and code into one clean text file.
 It's the feline cousin of Unix `cat`—polished for PowerShell, built for sharing code with recruiters, collaborators, and LLMs.
 
+> **Breaking change (v2.0.0):** PowerCat no longer includes `.md` files by default. This was an intentional, breaking change to avoid accidentally bundling documentation. To restore previous behavior, explicitly opt-in with `-IncludeMarkdown` or add `-Extensions ".md"`. See ReleaseNotes for migration guidance.
+
 ## ✨ Features
 
 - **Stdout-first output:** Outputs to stdout by default (Unix `cat` style); optional file writing via `-OutputFile`.

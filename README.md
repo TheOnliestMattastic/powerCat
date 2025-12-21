@@ -4,7 +4,7 @@
 
 [![POWERcat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/POWERcat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/POWERcat/actions/workflows/pester.yml)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/POWERcat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/POWERcat)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-bd93f9?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-bd93f9?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://opensource.org/licenses/MIT)
 [![Portfolio](https://img.shields.io/badge/Portfolio-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)](https://theonliestmattastic.github.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)
 
@@ -228,7 +228,7 @@ POWERcat is purpose-built for sharing code with recruiters, collaborators, and L
 
 ## 🛸 License
 
-This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0).
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## 🪐 Recruiter's note
 

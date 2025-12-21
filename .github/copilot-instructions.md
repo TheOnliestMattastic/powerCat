@@ -30,10 +30,11 @@ Purpose: quickly orient an AI coding agent to be productive in this repo.
     - CI uses the repository `pester.yml` workflow — keep tests small and focused on public behavior.
 
 - Common change checklist for PRs:
-  - Update `src/PowerCat/PowerCat.psm1` for behavior changes; keep exported function signature stable unless intentional.
-  - Add/adjust unit tests in `tests/PowerCat.Tests.ps1` to cover public surface (`Invoke-PowerCat`).
-  - If public API changes, bump version in `src/PowerCat/PowerCat.psd1` and add notes to `ReleaseNotes.md`.
-  - Update examples in `README.md` if CLI/aliases/parameters change.
+   - Update `src/PowerCat/PowerCat.psm1` for behavior changes; keep exported function signature stable unless intentional.
+   - **Mirroring changes:** If you modify the module, check `scripts/PowerCat.ps1` and apply the same changes (if applicable). Both implementations should stay in sync.
+   - Add/adjust unit tests in `tests/PowerCat.Tests.ps1` to cover public surface (`Invoke-PowerCat`).
+   - If public API changes, bump version in `src/PowerCat/PowerCat.psd1` and add notes to `ReleaseNotes.md`.
+   - Update examples in `README.md` if CLI/aliases/parameters change.
 
 - Quick examples for edits:
   - To add a new file-type switch (e.g., `-Toml`): extend `param` with a switch alias, append `.toml` into `$Extensions`, add README example, and add a Pester test ensuring `.toml` files are included.

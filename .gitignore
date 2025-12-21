@@ -81,6 +81,9 @@ bundle.txt
 *.concat.txt
 PowerCat-output.*
 output-*.txt
+AGENTS.*
+copilot-*.*
+
 
 # PowerShell
 *.ps1.bak

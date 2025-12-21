@@ -124,87 +124,87 @@ https://theonliestmattastic.github.io/
 #>
 
 param (
-    [Parameter(Mandatory = $true, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-    [Alias("s")]
-    [Alias("source")]
-    [Alias("src")]
-    [Alias("dir")]
-    [Alias("FullName")]
-    [string]$SourceDir,
+  [Parameter(Mandatory = $true, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+  [Alias("s")]
+  [Alias("source")]
+  [Alias("src")]
+  [Alias("dir")]
+  [Alias("FullName")]
+  [string]$SourceDir,
 
-    [Parameter(ParameterSetName = "Run")]
-    [Alias("o")]
-    [Alias("out")]
-    [Alias("output")]
-    [Alias("file")]
-    [string]$OutputFile,
+  [Parameter(ParameterSetName = "Run")]
+  [Alias("o")]
+  [Alias("out")]
+  [Alias("output")]
+  [Alias("file")]
+  [string]$OutputFile,
 
-    [Parameter(ParameterSetName = "Help")]
-    [Alias("h")]
-    [switch]$Help,
+  [Parameter(ParameterSetName = "Help")]
+  [Alias("h")]
+  [switch]$Help,
 
-    [Alias("r")]
-    [Alias("rec")]
-    [Alias("recursive")]
-    [switch]$Recurse,
+  [Alias("r")]
+  [Alias("rec")]
+  [Alias("recursive")]
+  [switch]$Recurse,
 
-    [Alias("l")]
-    [Alias("lu")]
-    [switch]$Lua,
+  [Alias("l")]
+  [Alias("lu")]
+  [switch]$Lua,
 
-    [Alias("b")]
-    [Alias("sh")]
-    [switch]$Bash,
+  [Alias("b")]
+  [Alias("sh")]
+  [switch]$Bash,
 
-    [Alias("ht")]
-    [Alias("htm")]
-    [switch]$HTML,
+  [Alias("ht")]
+  [Alias("htm")]
+  [switch]$HTML,
 
-    [Alias("c")]
-    [Alias("cs")]
-    [switch]$CSS,
+  [Alias("c")]
+  [Alias("cs")]
+  [switch]$CSS,
 
-    [Alias("p")]
-    [Alias("ps")]
-    [Alias("ps1")]
-    [switch]$Powershell,
+  [Alias("p")]
+  [Alias("ps")]
+  [Alias("ps1")]
+  [switch]$Powershell,
 
-    [Alias("e")]
-    [Alias("ex")]
-    [Alias("ext")]
-    [string[]]$Extensions = @(".md"), # default
+  [Alias("e")]
+  [Alias("ex")]
+  [Alias("ext")]
+  [string[]]$Extensions = @(".md"), # default
 
-    [Alias("f")]
-    [Alias("fen")]
-    [switch]$Fence,
+  [Alias("f")]
+  [Alias("fen")]
+  [switch]$Fence,
 
-    [Alias("st")]
-    [ValidateSet("Name", "Extension", "LastWriteTime", "Length")]
-    [string]$Sort = "Name",
+  [Alias("st")]
+  [ValidateSet("Name", "Extension", "LastWriteTime", "Length")]
+  [string]$Sort = "Name",
 
-    [Alias("ci")]
-    [string]$CatIgnore,
+  [Alias("ci")]
+  [string]$CatIgnore,
 
-    [Alias("nci")]
-    [switch]$NoCatIgnore,
+  [Alias("nci")]
+  [switch]$NoCatIgnore,
 
-    [Alias("min")]
-    [ValidateRange(0, [int64]::MaxValue)]
-    [int64]$MinSize = 0,
+  [Alias("min")]
+  [ValidateRange(0, [int64]::MaxValue)]
+  [int64]$MinSize = 0,
 
-    [Alias("max")]
-    [ValidateRange(0, [int64]::MaxValue)]
-    [int64]$MaxSize = 0,
+  [Alias("max")]
+  [ValidateRange(0, [int64]::MaxValue)]
+  [int64]$MaxSize = 0,
 
-    [Alias("mini")]
-    [switch]$Minify,
+  [Alias("mini")]
+  [switch]$Minify,
 
-    [Alias("hf")]
-    [ValidateSet("Markdown", "JSON", "YAML")]
-    [string]$HeaderFormat = "Markdown",
+  [Alias("hf")]
+  [ValidateSet("Markdown", "JSON", "YAML")]
+  [string]$HeaderFormat = "Markdown",
 
-    [Alias("sta")]
-    [switch]$Stats
+  [Alias("sta")]
+  [switch]$Stats
 )
 
 # Extend $Extensions based on switches
@@ -216,7 +216,7 @@ if ($Lua) { $Extensions += ".lua" }
 
 # Man-page help
 if ($Help) {
-    Write-Output @"
+  Write-Output @"
 PowerCat.ps1 — A single-shot concatenator for bundling markdown and code
 
 USAGE:
@@ -262,212 +262,218 @@ DESCRIPTION:
     Supports Markdown formatting, code fencing, minification, and token
     estimation for LLM integration.
 "@
-    return
+  return
 }
 
 # Expand paths (handle ~, relative paths, etc.)
 $SourceDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SourceDir)
 if ($OutputFile) {
-    $OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
+  $OutputFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputFile)
 }
 
 # Validate SourceDir
 if (-not(Test-Path -Path $SourceDir)) { 
-    Write-Error "SourceDir '$SourceDir' not found."
-    exit 1
+  Write-Error "SourceDir '$SourceDir' not found."
+  exit 1
 }
 
 # Validate OutputFile path is writable (only if OutputFile is specified)
 if ($OutputFile) {
-    $OutputDir = Split-Path -Path $OutputFile -Parent
-    if (-not $OutputDir) { $OutputDir = "." }
-    if (-not(Test-Path -Path $OutputDir)) {
-        Write-Error "Output directory '$OutputDir' does not exist."
-        exit 1
-    }
-    if (-not(Test-Path -Path $OutputDir -PathType Container)) {
-        Write-Error "Output path '$OutputDir' is not a directory."
-        exit 1
-    }
+  $OutputDir = Split-Path -Path $OutputFile -Parent
+  if (-not $OutputDir) { $OutputDir = "." }
+  if (-not(Test-Path -Path $OutputDir)) {
+    Write-Error "Output directory '$OutputDir' does not exist."
+    exit 1
+  }
+  if (-not(Test-Path -Path $OutputDir -PathType Container)) {
+    Write-Error "Output path '$OutputDir' is not a directory."
+    exit 1
+  }
 
-    # Check if we can write to the output directory
-    try {
-        $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
-        [System.IO.File]::WriteAllText($testFile, "test")
-        Remove-Item -Path $testFile -Force
-    } catch {
-        Write-Error "Output directory '$OutputDir' is not writable: $_"
-        exit 1
-    }
+  # Check if we can write to the output directory
+  try {
+    $testFile = Join-Path -Path $OutputDir -ChildPath ".powercat_write_test_$([System.IO.Path]::GetRandomFileName())"
+    [System.IO.File]::WriteAllText($testFile, "test")
+    Remove-Item -Path $testFile -Force
+  }
+  catch {
+    Write-Error "Output directory '$OutputDir' is not writable: $_"
+    exit 1
+  }
 }
 
 # Read catignore patterns
 $IgnorePatterns = @()
 if (-not $NoCatIgnore) {
-    # Determine catignore file path
-    if (-not $CatIgnore) {
-        $CatIgnore = Join-Path -Path $SourceDir -ChildPath "catignore"
-    } else {
-        # Expand user-provided catignore path
-        $CatIgnore = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CatIgnore)
-    }
+  # Determine catignore file path
+  if (-not $CatIgnore) {
+    $CatIgnore = Join-Path -Path $SourceDir -ChildPath "catignore"
+  }
+  else {
+    # Expand user-provided catignore path
+    $CatIgnore = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CatIgnore)
+  }
 
-    # Read patterns if catignore exists
-    if (Test-Path -Path $CatIgnore) {
-        $IgnorePatterns = @(Get-Content -Path $CatIgnore | 
-            Where-Object { $_ -and -not $_.StartsWith('#') } |
-            ForEach-Object { $_.Trim() })
-    }
+  # Read patterns if catignore exists
+  if (Test-Path -Path $CatIgnore) {
+    $IgnorePatterns = @(Get-Content -Path $CatIgnore | 
+      Where-Object { $_ -and -not $_.StartsWith('#') } |
+      ForEach-Object { $_.Trim() })
+  }
 }
 
 # Get all files in the directory (single scan, filter by extension in PowerShell)
 $getChildItemParams = @{
-    Path = $SourceDir
-    File = $true
+  Path = $SourceDir
+  File = $true
 }
 if ($Recurse) {
-    $getChildItemParams['Recurse'] = $true
+  $getChildItemParams['Recurse'] = $true
 }
 
 $Files = @(Get-ChildItem @getChildItemParams) | 
-    Where-Object { $Extensions -contains $_.Extension }
+Where-Object { $Extensions -contains $_.Extension }
 
 # Filter out ignored files and by size
 if ($IgnorePatterns.Count -gt 0 -or $MinSize -gt 0 -or $MaxSize -gt 0) {
-    $Files = $Files | Where-Object {
-        $file = $_
-        $sourceDirPath = $SourceDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
-        $relativePath = $file.FullName.Substring($sourceDirPath.Length).TrimStart('\', '/')
+  $Files = $Files | Where-Object {
+    $file = $_
+    $sourceDirPath = $SourceDir.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+    $relativePath = $file.FullName.Substring($sourceDirPath.Length).TrimStart('\', '/')
         
-        # Check catignore patterns
-        $shouldIgnore = $false
-        foreach ($pattern in $IgnorePatterns) {
-            if ($relativePath -like $pattern -or $file.Name -like $pattern) {
-                $shouldIgnore = $true
-                break
-            }
-        }
-        
-        # Check size constraints
-        if (-not $shouldIgnore) {
-            if ($MinSize -gt 0 -and $file.Length -lt $MinSize) {
-                $shouldIgnore = $true
-            }
-            elseif ($MaxSize -gt 0 -and $file.Length -gt $MaxSize) {
-                $shouldIgnore = $true
-            }
-        }
-        
-        -not $shouldIgnore
+    # Check catignore patterns
+    $shouldIgnore = $false
+    foreach ($pattern in $IgnorePatterns) {
+      if ($relativePath -like $pattern -or $file.Name -like $pattern) {
+        $shouldIgnore = $true
+        break
+      }
     }
+        
+    # Check size constraints
+    if (-not $shouldIgnore) {
+      if ($MinSize -gt 0 -and $file.Length -lt $MinSize) {
+        $shouldIgnore = $true
+      }
+      elseif ($MaxSize -gt 0 -and $file.Length -gt $MaxSize) {
+        $shouldIgnore = $true
+      }
+    }
+        
+    -not $shouldIgnore
+  }
 }
 
 # Filter out binary files to prevent crashes
 $binaryExtensions = @('.exe', '.dll', '.bin', '.zip', '.rar', '.7z', '.gz', '.tar', '.iso',
-    '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.ico', '.webp',
-    '.mp3', '.mp4', '.avi', '.mov', '.mkv', '.flv',
-    '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
-    '.db', '.sqlite', '.mdb', '.pyc', '.class', '.o', '.so', '.dylib')
+  '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.ico', '.webp',
+  '.mp3', '.mp4', '.avi', '.mov', '.mkv', '.flv',
+  '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+  '.db', '.sqlite', '.mdb', '.pyc', '.class', '.o', '.so', '.dylib')
 
 $Files = $Files | Where-Object {
-    if ($binaryExtensions -contains $_.Extension.ToLower()) {
-        Write-Warning "Skipping binary file: $($_.FullName)"
-        return $false
-    }
-    return $true
+  if ($binaryExtensions -contains $_.Extension.ToLower()) {
+    Write-Warning "Skipping binary file: $($_.FullName)"
+    return $false
+  }
+  return $true
 }
 
 if ($Files.Count -eq 0) {
-    Write-Output "No matching text files found in $SourceDir"
-    exit 0
+  Write-Output "No matching text files found in $SourceDir"
+  exit 0
 }
 
 switch ($Sort) {
-    "Name" { $Files = $Files | Sort-Object Name }
-    "Extension" { $Files = $Files | Sort-Object Extension, Name }
-    "LastWriteTime" { $Files = $Files | Sort-Object LastWriteTime }
-    "Length" { $Files = $Files | Sort-Object Length }
+  "Name" { $Files = $Files | Sort-Object Name }
+  "Extension" { $Files = $Files | Sort-Object Extension, Name }
+  "LastWriteTime" { $Files = $Files | Sort-Object LastWriteTime }
+  "Length" { $Files = $Files | Sort-Object Length }
 }
 
 # Build output content in a string array for efficiency
 $OutputContent = @()
 
 foreach ($file in $Files) {
-    # Generate header based on format
-    $header = switch ($HeaderFormat) {
-        "JSON" { ConvertTo-Json @{ file = $file.Name } -Compress }
-        "YAML" { "file: {0}" -f $file.Name }
-        default { "--- File: {0} ---" -f $file.Name }
-    }
-    $OutputContent += $header
+  # Generate header based on format
+  $header = switch ($HeaderFormat) {
+    "JSON" { ConvertTo-Json @{ file = $file.Name } -Compress }
+    "YAML" { "file: {0}" -f $file.Name }
+    default { "--- File: {0} ---" -f $file.Name }
+  }
+  $OutputContent += $header
     
-    if (-not $Minify) {
-        $OutputContent += ""
-    }
+  if (-not $Minify) {
+    $OutputContent += ""
+  }
 
-    # Open fence for -f flag
-    if ($Fence) {
-        $OutputContent += '```{0}' -f $file.Extension.TrimStart('.')
-    }
+  # Open fence for -f flag
+  if ($Fence) {
+    $OutputContent += '```{0}' -f $file.Extension.TrimStart('.')
+  }
 
-    # Read file content with UTF-8 encoding (cross-platform compatibility)
-    try {
-        $content = Get-Content -Path $file.FullName -Encoding UTF8 -ErrorAction Stop
+  # Read file content with UTF-8 encoding (cross-platform compatibility)
+  try {
+    $content = Get-Content -Path $file.FullName -Encoding UTF8 -ErrorAction Stop
         
-        if ($Minify) {
-            $content = $content | Where-Object {
-                $trimmed = $_.TrimStart()
-                # Skip empty lines and comment lines (# or //)
-                if ($trimmed) {
-                    -not ($trimmed -match '^#' -or $trimmed -match '^//')
-                } else {
-                    $false
-                }
-            }
+    if ($Minify) {
+      $content = $content | Where-Object {
+        $trimmed = $_.TrimStart()
+        # Skip empty lines and comment lines (# or //)
+        if ($trimmed) {
+          -not ($trimmed -match '^#' -or $trimmed -match '^//')
         }
+        else {
+          $false
+        }
+      }
+    }
         
-        $OutputContent += $content
-    } catch {
-        Write-Warning "Failed to read file '$($file.FullName)': $_"
-        continue
-    }
+    $OutputContent += $content
+  }
+  catch {
+    Write-Warning "Failed to read file '$($file.FullName)': $_"
+    continue
+  }
 
-    # Close fence for -f flag
-    if ($Fence) {
-        $OutputContent += '```'
-    }
+  # Close fence for -f flag
+  if ($Fence) {
+    $OutputContent += '```'
+  }
 
-    if (-not $Minify) {
-        $OutputContent += ""
-    }
-}
-
-# Calculate stats if requested
-if ($Stats) {
-    $outputText = $OutputContent -join "`n"
-    $charCount = $outputText.Length
-    # Token estimation: ~4 characters per token (varies by model; GPT-3.5/4 use this baseline)
-    $estimatedTokens = [Math]::Ceiling($charCount / 4)
-    
-    Write-Output "=== PowerCat Statistics ==="
-    Write-Output "Files processed:     $($Files.Count)"
-    Write-Output "Total characters:    $charCount"
-    Write-Output "Estimated tokens:    $estimatedTokens (4 chars/token baseline)"
-    Write-Output "==========================="
+  if (-not $Minify) {
+    $OutputContent += ""
+  }
 }
 
 # Write to file or stdout based on OutputFile parameter
 if ($OutputFile) {
-    try {
-        $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
-    } catch {
-        Write-Error "Failed to write output file '$OutputFile': $_"
-        exit 1
-    }
+  try {
+    $OutputContent | Set-Content -Path $OutputFile -Encoding UTF8 -ErrorAction Stop
+  }
+  catch {
+    Write-Error "Failed to write output file '$OutputFile': $_"
+    exit 1
+  }
     
-    # Return the output file object for pipeline support
-    Get-Item -Path $OutputFile
-} else {
-    # Output to stdout (matching Unix cat behavior)
-    $OutputContent | Write-Output
+  # Return the output file object for pipeline support
+  Get-Item -Path $OutputFile
+}
+else {
+  # Output to stdout (matching Unix cat behavior)
+  $OutputContent | Write-Output
+}
+
+# Calculate stats if requested
+if ($Stats) {
+  $outputText = $OutputContent -join "`n"
+  $charCount = $outputText.Length
+  # Token estimation: ~4 characters per token (varies by model; GPT-3.5/4 use this baseline)
+  $estimatedTokens = [Math]::Ceiling($charCount / 4)
+    
+  Write-Output "=== PowerCat Statistics ==="
+  Write-Output "Files processed:     $($Files.Count)"
+  Write-Output "Total characters:    $charCount"
+  Write-Output "Estimated tokens:    $estimatedTokens (4 chars/token baseline)"
+  Write-Output "==========================="
 }

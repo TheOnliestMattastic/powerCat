@@ -19,10 +19,54 @@ Describe "PowerCat Module" {
             $tempDir = New-Item -ItemType Directory -Path "/tmp/EmptyTest_$([System.Guid]::NewGuid())" -Force
             try {
                 $result = Invoke-PowerCat -s $tempDir.FullName 2>&1 | Out-String
-                $result | Should -Match "No matching"
+                $result | Should -Match "No extensions selected"
             }
             finally {
                 Remove-Item -Path $tempDir -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context "Defaults and positional parameters" {
+        It "Does not include Markdown files by default" {
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatMdDefault_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "only.md") -Value "Hidden"
+            try {
+                $result = Invoke-PowerCat -s $tempDir 2>&1 | Out-String
+                $result | Should -Match "No extensions selected"
+            }
+            finally {
+                Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Includes Markdown when -IncludeMarkdown is used" {
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatMdInclude_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "only.md") -Value "Visible"
+            try {
+                $result = Invoke-PowerCat -s $tempDir -IncludeMarkdown 2>&1 | Out-String
+                $result | Should -Match "Visible"
+            }
+            finally {
+                Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It "Accepts positional SourceDir parameter" {
+            $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) "PowerCatPositional_$([System.Guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            Set-Content -Path (Join-Path $tempDir "a.md") -Value "Positional"
+            $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "positional_$([System.Guid]::NewGuid()).txt"
+            try {
+                Invoke-PowerCat $tempDir -IncludeMarkdown -o $outFile
+                $content = Get-Content $outFile -Raw
+                $content | Should -Match "Positional"
+            }
+            finally {
+                Remove-Item -Path $outFile -Force -ErrorAction SilentlyContinue
+                Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
         }
     }
@@ -48,10 +92,10 @@ function HelloWorld {
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
         }
 
-        It "Concatenates .md files by default" {
+        It "Includes Markdown files when requested" {
             $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "bundle_$([System.Guid]::NewGuid()).txt"
             try {
-                Invoke-PowerCat -s $tempDir -o $outFile
+                Invoke-PowerCat -s $tempDir -o $outFile -IncludeMarkdown
 
                 $content = Get-Content $outFile -Raw
                 $content | Should -Match "Hello"
@@ -262,7 +306,7 @@ function HelloWorld {
         It "Skips binary files (.exe, .dll, image formats)" {
             $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "binary_skip_$([System.Guid]::NewGuid()).txt"
             try {
-                Invoke-PowerCat -s $tempDir -o $outFile -Recurse
+                Invoke-PowerCat -s $tempDir -o $outFile -Recurse -IncludeMarkdown
                 
                 $content = Get-Content $outFile -Raw
                 $content | Should -Match "Text file"
@@ -286,7 +330,7 @@ function HelloWorld {
                 New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
                 Set-Content -Path (Join-Path $sourceDir "test.md") -Value "Test content"
                 
-                Invoke-PowerCat -s $sourceDir -o $outFile 2>&1 | Out-Null
+                Invoke-PowerCat -s $sourceDir -o $outFile -IncludeMarkdown 2>&1 | Out-Null
                 
                 Test-Path $outFile | Should -Be $true
             }
@@ -429,7 +473,7 @@ function HelloWorld {
         It "Respects catignore by default" {
             $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "catignore_$([System.Guid]::NewGuid()).txt"
             try {
-                Invoke-PowerCat -s $tempDir -o $outFile -Recurse
+                Invoke-PowerCat -s $tempDir -o $outFile -Recurse -IncludeMarkdown
                 $content = Get-Content $outFile -Raw
                 $content | Should -Match "Included"
                 $content | Should -Not -Match "Secret"
@@ -442,7 +486,7 @@ function HelloWorld {
         It "Skips catignore when -NoCatIgnore is used" {
             $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "nocatignore_$([System.Guid]::NewGuid()).txt"
             try {
-                Invoke-PowerCat -s $tempDir -o $outFile -Recurse -nci
+                Invoke-PowerCat -s $tempDir -o $outFile -Recurse -nci -IncludeMarkdown
                 $content = Get-Content $outFile -Raw
                 $content | Should -Match "Included"
                 $content | Should -Match "Secret"
@@ -466,18 +510,18 @@ function HelloWorld {
         }
 
         It "Displays file count in stats output" {
-            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result = Invoke-PowerCat -s $tempDir -sta -IncludeMarkdown 2>&1 | Out-String
             $result | Should -Match "Files processed"
             $result | Should -Match "\b2\b"
         }
 
         It "Displays character count in stats output" {
-            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result = Invoke-PowerCat -s $tempDir -sta -IncludeMarkdown 2>&1 | Out-String
             $result | Should -Match "Total characters"
         }
 
         It "Displays token estimation in stats output" {
-            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result = Invoke-PowerCat -s $tempDir -sta -IncludeMarkdown 2>&1 | Out-String
             $result | Should -Match "Estimated tokens"
             $result | Should -Match "4 chars/token"
         }
@@ -485,7 +529,7 @@ function HelloWorld {
         It "Stats work with file output (-o flag)" {
             $outFile = Join-Path ([System.IO.Path]::GetTempPath()) "stats_file_$([System.Guid]::NewGuid()).txt"
             try {
-                $result = Invoke-PowerCat -s $tempDir -o $outFile -sta 2>&1 | Out-String
+                $result = Invoke-PowerCat -s $tempDir -o $outFile -sta -IncludeMarkdown 2>&1 | Out-String
                 $result | Should -Match "Files processed"
                 $result | Should -Match "Total characters"
                 
@@ -497,7 +541,7 @@ function HelloWorld {
         }
 
         It "Stats work with stdout (no -o flag)" {
-            $result = Invoke-PowerCat -s $tempDir -sta 2>&1 | Out-String
+            $result = Invoke-PowerCat -s $tempDir -sta -IncludeMarkdown 2>&1 | Out-String
             $result | Should -Match "PowerCat Statistics"
             $result | Should -Match "Hello|World"
         }

@@ -19,8 +19,11 @@ Include subdirectories.
 Wrap file contents in Markdown code fences (```).
 
 .PARAMETER Extensions
-Specify extensions to include (default: .md).
+Specify extensions to include (default: none — opt-in).
 Example: -e ".ps1",".json",".sh"
+
+.PARAMETER IncludeMarkdown
+When set, explicitly include `.md` files in the selection. This replaces the previous implicit inclusion of Markdown files.
 
 .PARAMETER Bash
 Include .sh files.
@@ -63,19 +66,19 @@ Format for file headers: Markdown (default), JSON, or YAML.
 Display statistics: file count, character count, and estimated token usage (for AI context planning).
 
 .EXAMPLE
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt"
-Concatenates .md files from C:\Project into bundle.txt.
+Invoke-PowerCat "C:\Project" -o "C:\bundle.txt"
+Concatenates matching files from C:\Project into bundle.txt (use `-IncludeMarkdown` to include .md files).
 
 .EXAMPLE
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -r -f
-Recursively concatenates .md files and wraps them in Markdown fences.
+Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -r -f
+Recursively concatenates matching files and wraps them in Markdown fences (use `-IncludeMarkdown` to include .md files).
 
 .EXAMPLE
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -b -p -sort Extension
+Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -b -p -Sort Extension
 Includes Bash and PowerShell files, sorted by extension.
 
 .EXAMPLE
-Invoke-PowerCat -s "C:\Project" -sta
+Invoke-PowerCat "C:\Project" -Sta
 Displays file count, character count, and estimated token usage (useful for AI context planning).
 
 .NOTES
@@ -88,10 +91,20 @@ https://github.com/TheOnliestMattastic/PowerCat
 .LINK
 https://theonliestmattastic.github.io/
 #>
+<#
+.DEPRECATION
+Note: PowerCat previously included `.md` files by default. That implicit behaviour is deprecated.
+PowerCat now requires explicit extension selection. Use `-IncludeMarkdown` to include `.md` files
+when needed. This change reduces accidental inclusion of documentation and gives safer, opt-in
+defaults for automation and CI workflows.
+
+Migration: replace commands like `Invoke-PowerCat -s <dir>` with
+`Invoke-PowerCat <dir> -IncludeMarkdown` or explicitly specify `-Extensions ".md"`.
+#>
 function Invoke-PowerCat {
   [CmdletBinding()]
   param (
-    [Parameter(Mandatory = $true, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+    [Parameter(Mandatory = $true, Position = 0, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
     [Alias("s")]
     [Alias("source")]
     [Alias("src")]
@@ -135,7 +148,17 @@ function Invoke-PowerCat {
     [Alias("e")]
     [Alias("ex")]
     [Alias("ext")]
-    [string[]]$Extensions = @(".md"), # default
+    [string[]]$Extensions = @(), # default: none (opt-in)
+
+    [Alias("excl")]
+    [string[]]$ExcludeExtensions = @(),
+
+    [Alias("force")]
+    [switch]$ForceOverwrite,
+
+    [Alias("im")]
+    [Alias("m")]
+    [switch]$IncludeMarkdown,
 
     [Alias("f")]
     [Alias("fen")]
@@ -176,7 +199,25 @@ function Invoke-PowerCat {
   if ($CSS) { $Extensions += ".css" }
   if ($Powershell) { $Extensions += ".ps1" }
   if ($Lua) { $Extensions += ".lua" }
-  $Extensions = $Extensions | Select-Object -Unique
+  if ($IncludeMarkdown) { $Extensions += ".md" }
+  # Allow comma-separated single string entries in -Extensions
+  $Extensions = $Extensions | ForEach-Object {
+    if ($_ -is [string] -and $_ -like "*,*") {
+      ($_ -split ',') | ForEach-Object { $_.Trim() }
+    }
+    else {
+      $_
+    }
+  }
+  $Extensions = $Extensions | Where-Object { $_ } | Select-Object -Unique
+
+  # Normalize excluded extensions and remove them
+  if ($ExcludeExtensions.Count -gt 0) {
+    $exclude = $ExcludeExtensions | ForEach-Object {
+      if ($_ -is [string] -and $_ -like "*,*") { ($_ -split ',') | ForEach-Object { $_.Trim() } } else { $_ }
+    } | Where-Object { $_ } | Select-Object -Unique
+    $Extensions = $Extensions | Where-Object { $exclude -notcontains $_ }
+  }
 
   # Expand paths (handle ~, relative paths, etc.)
   $SourceDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($SourceDir)
@@ -210,8 +251,14 @@ function Invoke-PowerCat {
       Remove-Item -Path $testFile -Force
     }
     catch {
-      Write-Error "Output directory '$OutputDir' is not writable: $_"
-      return
+      if (-not $ForceOverwrite) {
+        Write-Error "Output directory '$OutputDir' is not writable: $_"
+        return
+      }
+    }
+    # If output file exists and ForceOverwrite specified, attempt to remove it
+    if ($OutputFile -and (Test-Path -Path $OutputFile) -and $ForceOverwrite) {
+      try { Remove-Item -Path $OutputFile -Force -ErrorAction Stop } catch { }
     }
   }
 
@@ -246,6 +293,12 @@ function Invoke-PowerCat {
 
   $Files = @(Get-ChildItem @getChildItemParams) | 
   Where-Object { $Extensions -contains $_.Extension }
+
+  # If no extensions selected, return early with a helpful message
+  if ($Extensions.Count -eq 0) {
+    Write-Output "No extensions selected. Use -Extensions, -IncludeMarkdown, or switches like -PowerShell to select file types."
+    return
+  }
 
   # Filter out ignored files and by size
   if ($IgnorePatterns.Count -gt 0 -or $MinSize -gt 0 -or $MaxSize -gt 0) {

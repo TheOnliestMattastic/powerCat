@@ -80,6 +80,7 @@ https://github.com/user-attachments/assets/d10c5ac2-7390-4961-aee6-7657872fe7fb
 
 ### Write bundled files to `.txt` and view with `nano`
 
+https://github.com/user-attachments/assets/f69b41ac-2ec8-4529-8c5c-3b99914dedab
 
 ### Pipe bundled bash files to `bat` for syntax highlighting
 

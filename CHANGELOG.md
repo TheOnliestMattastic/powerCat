@@ -4,6 +4,29 @@ All notable changes to PowerCat are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-21
+
+### ⚠️ Breaking
+
+- Removed implicit inclusion of `.md` files. Users must explicitly opt-in with `-IncludeMarkdown` or `-Extensions ".md"`.
+
+### ✨ Added
+
+- `-IncludeMarkdown` switch to explicitly include Markdown files.
+- `-ExcludeExtensions` to remove selected extension types from processing.
+- `-ForceOverwrite` to remove and overwrite existing read-only output files when requested.
+- Comma-separated `-Extensions` parsing for convenience (e.g. `-Extensions ".ps1,.md"`).
+
+### ✅ Improved
+
+- Positional `SourceDir` clarified as the first required parameter.
+- Script wrapper (`scripts/PowerCat.ps1`) now mirrors module behavior and accepts the same flags.
+- Expanded Pester tests to cover new behaviors and script parity.
+
+### 🧭 Migration
+
+- Update automation to include `-IncludeMarkdown` or explicit `-Extensions` if you previously relied on implicit Markdown inclusion.
+
 ## [1.1.0] - 2025-12-18
 
 ### ✨ Added

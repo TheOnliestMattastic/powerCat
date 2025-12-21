@@ -1,36 +1,17 @@
-#    ███████████ █████                                                                       
-#   ░█░░░███░░░█░░███                                                                        
-#   ░   ░███  ░  ░███████    ██████                                                          
-#       ░███     ░███░░███  ███░░███                                                         
-#       ░███     ░███ ░███ ░███████                                                          
-#       ░███     ░███ ░███ ░███░░░                                                           
-#       █████    ████ █████░░██████                                                          
-#      ░░░░░    ░░░░ ░░░░░  ░░░░░░                                                           
-#                                                                                            
-#       ███████               ████   ███                    █████                            
-#     ███░░░░░███            ░░███  ░░░                    ░░███                             
-#    ███     ░░███ ████████   ░███  ████   ██████   █████  ███████                           
-#   ░███      ░███░░███░░███  ░███ ░░███  ███░░███ ███░░  ░░░███░                            
-#   ░███      ░███ ░███ ░███  ░███  ░███ ░███████ ░░█████   ░███                             
-#   ░░███     ███  ░███ ░███  ░███  ░███ ░███░░░   ░░░░███  ░███ ███                         
-#    ░░░███████░   ████ █████ █████ █████░░██████  ██████   ░░█████                          
-#      ░░░░░░░    ░░░░ ░░░░░ ░░░░░ ░░░░░  ░░░░░░  ░░░░░░     ░░░░░                           
-#                                                                                            
-#    ██████   ██████            █████     █████                       █████     ███          
-#   ░░██████ ██████            ░░███     ░░███                       ░░███     ░░░           
-#    ░███░█████░███   ██████   ███████   ███████    ██████    █████  ███████   ████   ██████ 
-#    ░███░░███ ░███  ░░░░░███ ░░░███░   ░░░███░    ░░░░░███  ███░░  ░░░███░   ░░███  ███░░███
-#    ░███ ░░░  ░███   ███████   ░███      ░███      ███████ ░░█████   ░███     ░███ ░███ ░░░ 
-#    ░███      ░███  ███░░███   ░███ ███  ░███ ███ ███░░███  ░░░░███  ░███ ███ ░███ ░███  ███
-#    █████     █████░░████████  ░░█████   ░░█████ ░░████████ ██████   ░░█████  █████░░██████ 
-#   ░░░░░     ░░░░░  ░░░░░░░░    ░░░░░     ░░░░░   ░░░░░░░░ ░░░░░░     ░░░░░  ░░░░░  ░░░░░░  
-#
-#                                presents,
-#
-#                                PowerCat:
-#                       A single-shot concatenator 
-#        for bundling markdown and code into one clean text file. 
-# --------------------------------------------------------------------------
+# =============================================================================
+#              ▄ ▄                                   ▄                         
+#            █ ▀ ▀ █ ██████ ▄▄ ▄▄ ▄▄▄▄▄   ▄█▀▀▀▀█ ▄  ▀          ▄    ▄▄▄    ▄  
+#           █       █  ██   ██▄██ ██▄▄    █  █▀▄   ▀▄ ▄▄▄ ▄▄▄    ▀▄ ██▀██ ▄▀   
+#          █  ▄▄▄▄▄  █ ██   ██ ██ ██▄▄▄   █▄ ▀▀ █ ▄▀  ▄         ▄▀  ▀███▀  ▀▄  
+#        ▄ ▄         ▄ ▄                   ▀▀▀▀▀     ▀                         
+#      █ ▀ ▀ █     █ ▀ ▀ █   ▄████▄ ▄▄  ▄▄ ▄▄    ▄▄ ▄▄▄▄▄  ▄▄▄▄ ▄▄▄▄▄▄         
+#     █       █   █       █  ██  ██ ███▄██ ██    ██ ██▄▄  ███▄▄   ██           
+#    █  ▄▄▄▄▄  █ █  ▄▄▄▄▄  █ ▀████▀ ██ ▀██ ██▄▄▄ ██ ██▄▄▄ ▄▄██▀   ██           
+#                                                                              
+#    ▄    ▄▄▄    ▄ ██▄  ▄██ ▄████▄ ██████ ██████ ▄▄▄   ▄▄▄▄ ▄▄▄▄▄▄ ▄▄  ▄▄▄▄    
+#     ▀▄ ██▀██ ▄▀  ██ ▀▀ ██ ██▄▄██   ██     ██  ██▀██ ███▄▄   ██   ██ ██▀▀▀    
+#    ▄▀  ▀███▀  ▀▄ ██    ██ ██  ██   ██     ██  ██▀██ ▄▄██▀   ██   ██ ▀████    
+# =============================================================================
 <#
 .SYNOPSIS
 Concatenate files from a source directory to stdout or output file.
@@ -53,8 +34,11 @@ Include subdirectories.
 Wrap file contents in Markdown code fences (```).
 
 .PARAMETER Extensions
-Specify extensions to include (default: .md).
+Specify extensions to include (default: none — opt-in).
 Example: -e ".ps1",".json",".sh"
+
+.PARAMETER IncludeMarkdown
+When set, explicitly include `.md` files in the selection. This replaces the previous implicit inclusion of Markdown files.
 
 .PARAMETER Bash
 Include .sh files.
@@ -97,19 +81,19 @@ Format for file headers: Markdown (default), JSON, or YAML.
 Display statistics: file count, character count, and estimated token usage (for AI context planning).
 
 .EXAMPLE
-.\PowerCat.ps1 -s "C:\Project"
-Outputs .md files to stdout (pipe to Out-File for file output).
+.\PowerCat.ps1 "C:\Project"
+Outputs matching files to stdout (no implicit Markdown). Use `-IncludeMarkdown` to include `.md` files.
 
 .EXAMPLE
-.\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
-Writes .md files to bundle.txt.
+.\PowerCat.ps1 "C:\Project" -o "C:\bundle.txt"
+Writes matching files to bundle.txt (use `-IncludeMarkdown` to include `.md`).
 
 .EXAMPLE
-.\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -f -p
+.\PowerCat.ps1 "C:\Project" -o "C:\bundle.txt" -r -f -p
 Recursively concatenates .ps1 files with Markdown fences, writes to bundle.txt.
 
 .EXAMPLE
-.\PowerCat.ps1 -s "C:\Project" -st
+.\PowerCat.ps1 "C:\Project" -st
 Displays file count, character count, and estimated token usage.
 
 .NOTES
@@ -123,8 +107,15 @@ https://github.com/TheOnliestMattastic/PowerCat
 https://theonliestmattastic.github.io/
 #>
 
+<# DEPRECATION NOTICE
+Note: PowerCat previously included `.md` files by default. That implicit behaviour is deprecated.
+PowerCat now requires explicit extension selection. Use the `-IncludeMarkdown` switch to opt-in
+to including `.md` files, or specify `-Extensions ".md"` explicitly. This makes automated
+workflows safer and avoids accidental inclusion of documentation files.
+#>
+
 param (
-  [Parameter(Mandatory = $true, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+  [Parameter(Mandatory = $true, Position = 0, ParameterSetName = "Run", ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
   [Alias("s")]
   [Alias("source")]
   [Alias("src")]
@@ -172,7 +163,17 @@ param (
   [Alias("e")]
   [Alias("ex")]
   [Alias("ext")]
-  [string[]]$Extensions = @(".md"), # default
+  [string[]]$Extensions = @(), # default: none (opt-in)
+
+  [Alias("im")]
+  [Alias("m")]
+  [switch]$IncludeMarkdown,
+
+  [Alias("excl")]
+  [string[]]$ExcludeExtensions = @(),
+
+  [Alias("force")]
+  [switch]$ForceOverwrite,
 
   [Alias("f")]
   [Alias("fen")]
@@ -213,6 +214,31 @@ if ($HTML) { $Extensions += ".html" }
 if ($CSS) { $Extensions += ".css" }
 if ($Powershell) { $Extensions += ".ps1" }
 if ($Lua) { $Extensions += ".lua" }
+if ($IncludeMarkdown) { $Extensions += ".md" }
+
+# Parse comma-separated extensions
+$Extensions = ($Extensions -join ',') -split ',' |
+              ForEach-Object {
+                $e = $_.Trim()
+                if (-not $e) { return }
+                if ($e[0] -ne '.') { $e = ".$e" }
+                $e.ToLowerInvariant()
+              } |
+              Where-Object { $_ } |
+              Select-Object -Unique
+
+# Normalize excluded extensions and remove them
+if ($ExcludeExtensions.Count -gt 0) {
+  $exclude = $ExcludeExtensions | ForEach-Object {
+    if ($_ -is [string] -and $_ -like "*,*") { ($_ -split ',') | ForEach-Object { $_.Trim() } } else { $_ }
+  } | ForEach-Object {
+    $e = $_.Trim()
+    if (-not $e) { return }
+    if ($e[0] -ne '.') { $e = ".$e" }
+    $e.ToLowerInvariant()
+  } | Where-Object { $_ } | Select-Object -Unique
+  $Extensions = $Extensions | Where-Object { $exclude -notcontains $_ }
+}
 
 # Man-page help
 if ($Help) {
@@ -220,10 +246,11 @@ if ($Help) {
 PowerCat.ps1 — A single-shot concatenator for bundling markdown and code
 
 USAGE:
-    .\PowerCat.ps1 -s <SourceDir> [-o <OutputFile>] [options]
+  .\PowerCat.ps1 <SourceDir> [-o <OutputFile>] [options]
 
 REQUIRED PARAMETERS:
-    -s, -SourceDir      Path to the directory containing files
+  <SourceDir> (positional) Path to the directory containing files
+  -s, -SourceDir      Alias for positional `SourceDir`
 
 OPTIONAL PARAMETERS:
     -o, -OutputFile     Path to the output text file (default: stdout)
@@ -231,8 +258,9 @@ OPTIONAL PARAMETERS:
 OPTIONS:
     -r, -Recurse        Include subdirectories
     -f, -Fence          Wrap file contents in Markdown code fences
-    -e, -Extensions     Specify extensions (default: .md)
-                        Example: -e ".ps1",".json",".sh"
+    -e, -Extensions     Specify extensions (default: none — opt-in)
+              Example: -e ".ps1",".json",".sh"
+    -im, -IncludeMarkdown Explicitly include `.md` files (useful for restoring legacy behavior)
     -st, -Sort          Sort by Name, Extension, LastWriteTime, or Length
     -ci, -CatIgnore     Path to catignore file (default: catignore in source dir)
     -nci, -NoCatIgnore  Skip reading catignore file
@@ -250,15 +278,15 @@ OPTIONS:
 
     -h, -Help           Show this help message
 
-EXAMPLES:
-    .\PowerCat.ps1 -s "C:\Project"
-    .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt"
-    .\PowerCat.ps1 -s "C:\Project" -o "C:\bundle.txt" -r -f -p
-    .\PowerCat.ps1 -s "C:\Project" -sta
-
-DESCRIPTION:
-    PowerCat collects files by extension and concatenates them. Outputs to
-    stdout by default (Unix cat style); pipe to Out-File for redirection.
+.EXAMPLE
+.\PowerCat.ps1 "C:\Project"
+Outputs matching files to stdout (no implicit Markdown). Use `-IncludeMarkdown` to include `.md` files.
+.EXAMPLE
+.\PowerCat.ps1 "C:\Project" -o "C:\bundle.txt"
+Writes matching files to bundle.txt (use `-IncludeMarkdown` to include `.md`).
+.EXAMPLE
+.\PowerCat.ps1 "C:\Project" -o "C:\bundle.txt" -r -f -p
+Recursively concatenates .ps1 files with Markdown fences, writes to bundle.txt.
     Supports Markdown formatting, code fencing, minification, and token
     estimation for LLM integration.
 "@
@@ -297,8 +325,26 @@ if ($OutputFile) {
     Remove-Item -Path $testFile -Force
   }
   catch {
-    Write-Error "Output directory '$OutputDir' is not writable: $_"
-    exit 1
+    if (-not $ForceOverwrite) {
+      Write-Error "Output directory '$OutputDir' is not writable: $_"
+      exit 1
+    }
+  }
+
+  # If output file exists and ForceOverwrite specified, attempt to remove it
+  if ($OutputFile -and (Test-Path -Path $OutputFile) -and $ForceOverwrite) {
+    try {
+      $item = Get-Item -LiteralPath $OutputFile -ErrorAction Stop
+      if ($item.PSIsContainer) {
+        Write-Error "Output path '$OutputFile' is a directory; refusing to remove it with -ForceOverwrite."
+        exit 1
+      }
+      Remove-Item -LiteralPath $OutputFile -Force -ErrorAction Stop
+    }
+    catch {
+      Write-Error "Failed to remove existing output file '$OutputFile' even with -ForceOverwrite. Error: $_"
+      exit 1
+    }
   }
 }
 
@@ -331,9 +377,14 @@ if ($Recurse) {
   $getChildItemParams['Recurse'] = $true
 }
 
+# If no extensions selected, return early with a helpful message
+if ($Extensions.Count -eq 0) {
+  Write-Error "No extensions selected. Use -Extensions, -IncludeMarkdown, or switches like -PowerShell to select file types."
+  exit 1
+}
+
 $Files = @(Get-ChildItem @getChildItemParams) | 
 Where-Object { $Extensions -contains $_.Extension }
-
 # Filter out ignored files and by size
 if ($IgnorePatterns.Count -gt 0 -or $MinSize -gt 0 -or $MaxSize -gt 0) {
   $Files = $Files | Where-Object {

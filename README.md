@@ -11,7 +11,9 @@
 ## 🔭 Overview
 
 **PowerCat** is a single-shot concatenator for bundling markdown and code into one clean text file.
-It's the feline cousin of Unix `cat`—polished for PowerShell, Markdown-aware, and built for sharing code with recruiters, collaborators, and LLMs.
+It's the feline cousin of Unix `cat`—polished for PowerShell, built for sharing code with recruiters, collaborators, and LLMs.
+
+> **Breaking change (v2.0.0):** PowerCat no longer includes `.md` files by default. This was an intentional, breaking change to avoid accidentally bundling documentation. To restore previous behavior, explicitly opt-in with `-IncludeMarkdown` or add `-Extensions ".md"`. See ReleaseNotes for migration guidance.
 
 ## ✨ Features
 
@@ -24,7 +26,7 @@ It's the feline cousin of Unix `cat`—polished for PowerShell, Markdown-aware, 
 - **Minification:** Strip comments and blank lines with `-Minify` for lean, token-optimized bundles.
 - **Size filtering:** Exclude files by size with `-MinSize` and `-MaxSize` to control output volume.
 - **Binary file detection:** Automatically skips common binary formats to prevent errors.
-- **Extensions:** Default `.md` plus switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`, `-Lua`) or custom via `-Extensions`.
+- **Extensions:** No implicit defaults — opt-in. Use `-IncludeMarkdown` to include `.md`, or include types via switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`, `-Lua`) or `-Extensions`.
 - **Sorting:** Control file order with `-Sort Name|Extension|LastWriteTime|Length`.
 - **Catignore support:** Exclude files and directories with a `.gitignore`-style `catignore` file.
 - **Aliases:** Quick commands `PowerCat`, `pcat`, `concat` all point to `Invoke-PowerCat`.
@@ -42,19 +44,19 @@ Import-Module PowerCat
 ### Run as a cmdlet
 
 ```powershell
-# Output to file
-Invoke-PowerCat -SourceDir "C:\Project" -OutputFile "C:\bundle.txt"
+# Output to file (positional SourceDir)
+Invoke-PowerCat "C:\Project" -OutputFile "C:\bundle.txt"
 
 # Output to stdout (and pipe to file)
-Invoke-PowerCat -SourceDir "C:\Project" | Out-File "C:\bundle.txt"
+Invoke-PowerCat "C:\Project" | Out-File "C:\bundle.txt"
 ```
 
 ### Aliases
 
 ```powershell
-PowerCat -s . -o out.txt                    # Write to file
-pcat -s . | Out-File out.txt                # Pipe to file
-concat -s . -r -f -p                        # Stdout with fences
+PowerCat . -o out.txt                    # Write to file
+pcat . | Out-File out.txt                # Pipe to file
+concat . -r -f -p                        # Stdout with fences
 ```
 
 ### Help
@@ -66,25 +68,27 @@ Get-Help Invoke-PowerCat -Examples
 
 ## 🧪 Examples
 
-- **Concatenate `.md` files to stdout (default):**
+- **Concatenate matching files to stdout (no implicit Markdown):**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project"
+Invoke-PowerCat "C:\Project"
 # Output streams to console; pipe to capture
-Invoke-PowerCat -s "C:\Project" | Out-File bundle.txt
+Invoke-PowerCat "C:\Project" | Out-File bundle.txt
 ```
 
 - **Bundle for LLMs with minification, fences, and token stats:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -Recurse -Minify -Fence -PowerShell -Stats
+Invoke-PowerCat "C:\Project" -Recurse -Minify -Fence -PowerShell -Stats
 ```
 
 Output includes:
+
 - Stripped comments and blank lines (lean for token limits)
 - Code fenced blocks (markdown-aware)
 - Token estimate (4 chars/token baseline):
-```
+
+```powershell
 === PowerCat Statistics ===
 Files processed:     15
 Total characters:    45,230
@@ -95,7 +99,7 @@ Estimated tokens:    11,308 (4 chars/token baseline)
 - **Write to file with JSON headers for structured parsing:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
+Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
 ```
 
 Output includes structured headers like `{"file":"script.lua"}` for better LLM parsing.
@@ -103,20 +107,20 @@ Output includes structured headers like `{"file":"script.lua"}` for better LLM p
 - **Exclude large files to optimize for token limits:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -Recurse -MaxSize 50KB -Bash
+Invoke-PowerCat "C:\Project" -Recurse -MaxSize 50KB -Bash
 ```
 
 - **Custom extensions and sorting:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
+Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
 ```
 
 - **Use catignore to exclude directories:**
 
 Create a `catignore` file in your project:
 
-```
+```plaintext
 node_modules/
 .git/
 *.log
@@ -127,13 +131,14 @@ obj/
 Then run:
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -o "C:\bundle.txt" -Recurse
+Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -Recurse
 ```
 
 - **View token estimation before bundling:**
 
 ```powershell
-Invoke-PowerCat -s "C:\Project" -Recurse -Minify -Stats
+# Note: PowerCat no longer includes Markdown by default. Use `-IncludeMarkdown` to include `.md` files.
+Invoke-PowerCat "C:\Project" -Recurse -Minify -Stats
 # See: Files processed, Total characters, Estimated tokens
 # Then decide: pipe to file, adjust MaxSize, or minify further
 ```
@@ -149,13 +154,13 @@ Module usage:
 
 ```powershell
 Import-Module .\src\PowerCat\ -Force
-Invoke-PowerCat -s . -o out.txt
+Invoke-PowerCat . -o out.txt
 ```
 
 Script usage:
 
 ```powershell
-.\scripts\PowerCat.ps1 -s . -o out.txt
+.\scripts\PowerCat.ps1 . -o out.txt
 ```
 
 _Note:_ If you see scripts blocked, run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
@@ -178,10 +183,10 @@ Get-ChildItem -Recurse -Filter "*.ps1" | Get-Content
 **PowerCat:**
 
 ```powershell
-Invoke-PowerCat -s . -Recurse -Fence -PowerShell
+Invoke-PowerCat . -Recurse -Fence -PowerShell
 # Output:
 # --- File: script1.ps1 ---
-# 
+#
 # '''ps1
 # function HelloWorld { Write-Host "Hello" }
 # '''
@@ -193,22 +198,21 @@ Invoke-PowerCat -s . -Recurse -Fence -PowerShell
 # '''
 ```
 
-
 **The difference:**
 
-| Feature | `cat` | PowerCat |
-|---------|-------|----------|
-| Stdout output | ✅ | ✅ (default) |
-| File output (optional) | ❌ | ✅ |
-| File headers | ❌ | ✅ (Markdown/JSON/YAML) |
-| Code fencing | ❌ | ✅ (Markdown fences) |
-| Minification | ❌ | ✅ (strip comments) |
-| Token estimation | ❌ | ✅ (AI context planning) |
-| Size filtering | ❌ | ✅ (min/max size) |
-| Exclusion patterns | ❌ | ✅ (catignore support) |
-| Sorting control | ❌ | ✅ (by name, extension, size, date) |
-| Multiple extensions | ❌ | ✅ (flexible file type selection) |
-| Binary safety | ❌ | ✅ (auto-skip executables, images, etc.) |
+| Feature                | `cat` | PowerCat                                 |
+| ---------------------- | ----- | ---------------------------------------- |
+| Stdout output          | ✅    | ✅ (default)                             |
+| File output (optional) | ❌    | ✅                                       |
+| File headers           | ❌    | ✅ (Markdown/JSON/YAML)                  |
+| Code fencing           | ❌    | ✅ (Markdown fences)                     |
+| Minification           | ❌    | ✅ (strip comments)                      |
+| Token estimation       | ❌    | ✅ (AI context planning)                 |
+| Size filtering         | ❌    | ✅ (min/max size)                        |
+| Exclusion patterns     | ❌    | ✅ (catignore support)                   |
+| Sorting control        | ❌    | ✅ (by name, extension, size, date)      |
+| Multiple extensions    | ❌    | ✅ (flexible file type selection)        |
+| Binary safety          | ❌    | ✅ (auto-skip executables, images, etc.) |
 
 PowerCat is purpose-built for sharing code with recruiters, collaborators, and LLMs—creating readable, structured, token-aware bundles that respect context limits.
 

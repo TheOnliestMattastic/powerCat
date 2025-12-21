@@ -3,7 +3,7 @@
     RootModule        = 'PowerCat.psm1'
 
     # Version number of this module
-    ModuleVersion     = '1.2.2'
+    ModuleVersion     = '2.0.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop','Core')
@@ -56,7 +56,7 @@
             IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg'
 
             # Release notes
-            ReleaseNotes = 'v1.2.0: Stdout output by default (Unix cat-style), optional file output, token estimation for AI context planning. See https://github.com/TheOnliestMattastic/PowerCat/blob/main/ReleaseNotes.md'
+            ReleaseNotes = 'v2.0.0: Breaking change — no implicit .md; opt-in extensions, added -IncludeMarkdown, -ExcludeExtensions, -ForceOverwrite, comma-separated -Extensions, improved script parity and tests. See https://github.com/TheOnliestMattastic/PowerCat/blob/main/ReleaseNotes.md'
         }
     }
 }

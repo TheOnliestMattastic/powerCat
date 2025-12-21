@@ -119,3 +119,26 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - Fixed `-OutputFile` path expansion to only occur when parameter is provided, preventing erroneous directory resolution on stdout-only invocations.
 - Corrected test suite to validate both stdout and file-output behaviors.
 
+## Version 2.0.0 (2025-12-21)
+
+### Breaking Changes
+
+- **Implicit Markdown removed:** PowerCat no longer includes `.md` files by default. Users must explicitly opt-in with `-IncludeMarkdown` or `-Extensions ".md"`. This avoids accidentally bundling documentation and makes automated workflows safer.
+
+### Added
+
+- `-IncludeMarkdown`: explicit switch to include `.md` files.
+- `-ExcludeExtensions`: exclude specific extensions from selection (accepts comma-separated lists).
+- `-ForceOverwrite` (`-force` alias for script): remove existing read-only output files when present and explicitly requested.
+- Support for comma-separated `-Extensions` strings for convenience (e.g. `-Extensions ".ps1,.md"`).
+
+### Improved
+
+- Positional `SourceDir` is required for clarity (first positional parameter).
+- Script and module parity tightened; script wrapper mirrors module behaviors and accepts the same flags.
+- Tests expanded to cover new behaviors and script parity; all tests pass.
+
+### Notes
+
+- This release is a breaking change due to the removal of implicit Markdown inclusion. Update automation or scripts to pass `-IncludeMarkdown` where `.md` files are required.
+

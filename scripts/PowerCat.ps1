@@ -231,6 +231,11 @@ $Extensions = ($Extensions -join ',') -split ',' |
 if ($ExcludeExtensions.Count -gt 0) {
   $exclude = $ExcludeExtensions | ForEach-Object {
     if ($_ -is [string] -and $_ -like "*,*") { ($_ -split ',') | ForEach-Object { $_.Trim() } } else { $_ }
+  } | ForEach-Object {
+    $e = $_.Trim()
+    if (-not $e) { return }
+    if ($e[0] -ne '.') { $e = ".$e" }
+    $e.ToLowerInvariant()
   } | Where-Object { $_ } | Select-Object -Unique
   $Extensions = $Extensions | Where-Object { $exclude -notcontains $_ }
 }

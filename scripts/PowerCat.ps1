@@ -320,16 +320,16 @@ if ($OutputFile) {
     Remove-Item -Path $testFile -Force
   }
   catch {
-      if (-not $ForceOverwrite) {
-        Write-Error "Output directory '$OutputDir' is not writable: $_"
-        exit 1
-      }
+    if (-not $ForceOverwrite) {
+      Write-Error "Output directory '$OutputDir' is not writable: $_"
+      exit 1
+    }
   }
 
-    # If output file exists and ForceOverwrite specified, attempt to remove it
-    if ($OutputFile -and (Test-Path -Path $OutputFile) -and $ForceOverwrite) {
-      try { Remove-Item -Path $OutputFile -Force -ErrorAction Stop } catch { }
-    }
+  # If output file exists and ForceOverwrite specified, attempt to remove it
+  if ($OutputFile -and (Test-Path -Path $OutputFile) -and $ForceOverwrite) {
+    try { Remove-Item -Path $OutputFile -Force -ErrorAction Stop } catch { }
+  }
 }
 
 # Read catignore patterns

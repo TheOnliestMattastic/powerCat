@@ -70,11 +70,11 @@ Get-Help Invoke-POWERcat -Examples
 
 See POWERcat in action:
 
-- **[demo-help](assets/demo-help.mp4)** — Display the man-page style help with the `-h` flag
-- **[demo-stdout](assets/demo-stdout.mp4)** — Bundle files with `-Stats` and output to stdout with character and token counts
-- **[demo-txt](assets/demo-txt.mp4)** — Write bundled files to `.txt`, verify the file exists, and view output with `nano`
-- **[demo-bat](assets/demo-bat.mp4)** — Pipe bundled bash files to `bat` for shell syntax highlighting
-- **[demo-lolcat](assets/demo-lolcat.mp4)** — Pipe bundled output to `lolcat` for rainbow terminal fun
+- **![demo-help](assets/demo-help.mp4)** — Display the man-page style help with the `-h` flag
+- **![demo-stdout](assets/demo-stdout.mp4)** — Bundle files with `-Stats` and output to stdout with character and token counts
+- **![demo-txt](assets/demo-txt.mp4)** — Write bundled files to `.txt`, verify the file exists, and view output with `nano`
+- **![demo-bat](assets/demo-bat.mp4)** — Pipe bundled bash files to `bat` for shell syntax highlighting
+- **![demo-lolcat](assets/demo-lolcat.mp4)** — Pipe bundled output to `lolcat` for rainbow terminal fun
 
 ## 🧪 Examples
 

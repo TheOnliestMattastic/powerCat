@@ -50,7 +50,7 @@
             LicenseUri = 'https://www.gnu.org/licenses/gpl-3.0'
 
             # A URL to the main website for this project
-            ProjectUri = 'https://github.com/TheOnliestMattastic/PowerCat'
+            ProjectUri = 'https://github.com/TheOnliestMattastic/POWERcat'
 
             # A URL to an icon representing this module
             IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg'

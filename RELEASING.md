@@ -1,4 +1,4 @@
-# 🚀 Release Checklist for `PowerCat`
+# 🚀 Release Checklist for `POWERcat`
 
 ```txt
  ███████████ █████                                                                       
@@ -33,7 +33,7 @@ This checklist ensures that every release is consistent across GitHub and the Po
 
 ## 🌒 1. Bump the Module Version
 
-- Open `PowerCat.psd1`.
+- Open `POWERcat.psd1`.
 - Update the `ModuleVersion` field:
 
 ```powershell
@@ -45,7 +45,7 @@ ModuleVersion = '1.0.X'
 ## 🌓 2. Commit the Change
 
 ```powershell
-git add PowerCat.psd1
+git add POWERcat.psd1
 git commit -m "Bump version to v1.0.X"
 git push origin main
 ```
@@ -76,7 +76,7 @@ git push origin v1.0.X
 - Verify on PowerShell Gallery:
 
 ```powershell
-Find-Module PowerCat
+Find-Module POWERcat
 ```
 
   Should show the new version.
@@ -85,7 +85,7 @@ Find-Module PowerCat
 
 - Go to your repo → **Releases** → **Draft a new release**.
 - Select the tag `v1.0.X`.
-- Copy the `ReleaseNotes` from `PowerCat.psd1` or `CHANGELOG.md`.
+- Copy the `ReleaseNotes` from `POWERcat.psd1` or `CHANGELOG.md`.
 
 ## 🌘 Quick Summary
 

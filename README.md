@@ -1,19 +1,19 @@
-# 🐱 PowerCat
+# 🐈‍⬛ POWERcat
 
-![Logo](assets/logo.png)
+![POWERcat Logo](assets/banner.png)
 
-[![PowerCat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/PowerCat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/PowerCat/actions/workflows/pester.yml)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PowerCat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/PowerCat)
+[![POWERcat CI](https://img.shields.io/github/actions/workflow/status/TheOnliestMattastic/POWERcat/pester.yml?branch=main&style=for-the-badge&label=CI%20Tests&labelColor=6272a4)](https://github.com/TheOnliestMattastic/POWERcat/actions/workflows/pester.yml)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/POWERcat?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.powershellgallery.com/packages/POWERcat)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-bd93f9?color=bd93f9&style=for-the-badge&labelColor=6272a4)](https://www.gnu.org/licenses/gpl-3.0)
 [![Portfolio](https://img.shields.io/badge/Portfolio-bd93f9?style=for-the-badge&logo=githubpages&logoColor=white&labelColor=6272a4)](https://theonliestmattastic.github.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)
 
 ## 🔭 Overview
 
-**PowerCat** is a single-shot concatenator for bundling markdown and code into one clean text file.
+**POWERcat** is a single-shot concatenator for bundling markdown and code into one clean text file.
 It's the feline cousin of Unix `cat`—polished for PowerShell, built for sharing code with recruiters, collaborators, and LLMs.
 
-> **Breaking change (v2.0.0):** PowerCat no longer includes `.md` files by default. This was an intentional, breaking change to avoid accidentally bundling documentation. To restore previous behavior, explicitly opt-in with `-IncludeMarkdown` or add `-Extensions ".md"`. See ReleaseNotes for migration guidance.
+> **Breaking change (v2.0.0):** POWERcat no longer includes `.md` files by default. This was an intentional, breaking change to avoid accidentally bundling documentation. To restore previous behavior, explicitly opt-in with `-IncludeMarkdown` or add `-Extensions ".md"`. See ReleaseNotes for migration guidance.
 
 ## ✨ Features
 
@@ -29,32 +29,32 @@ It's the feline cousin of Unix `cat`—polished for PowerShell, built for sharin
 - **Extensions:** No implicit defaults — opt-in. Use `-IncludeMarkdown` to include `.md`, or include types via switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`, `-Lua`) or `-Extensions`.
 - **Sorting:** Control file order with `-Sort Name|Extension|LastWriteTime|Length`.
 - **Catignore support:** Exclude files and directories with a `.gitignore`-style `catignore` file.
-- **Aliases:** Quick commands `PowerCat`, `pcat`, `concat` all point to `Invoke-PowerCat`.
-- **Native help:** Full comment-based help via `Get-Help Invoke-PowerCat`.
+- **Aliases:** Quick commands `POWERcat`, `pcat`, `concat` all point to `Invoke-POWERcat`.
+- **Native help:** Full comment-based help via `Get-Help Invoke-POWERcat`.
 
 ## 🚀 Blasting Off
 
 ### Install from PowerShell Gallery
 
 ```powershell
-Install-Module -Name PowerCat -Scope CurrentUser
-Import-Module PowerCat
+Install-Module -Name POWERcat -Scope CurrentUser
+Import-Module POWERcat
 ```
 
 ### Run as a cmdlet
 
 ```powershell
 # Output to file (positional SourceDir)
-Invoke-PowerCat "C:\Project" -OutputFile "C:\bundle.txt"
+Invoke-POWERcat "C:\Project" -OutputFile "C:\bundle.txt"
 
 # Output to stdout (and pipe to file)
-Invoke-PowerCat "C:\Project" | Out-File "C:\bundle.txt"
+Invoke-POWERcat "C:\Project" | Out-File "C:\bundle.txt"
 ```
 
 ### Aliases
 
 ```powershell
-PowerCat . -o out.txt                    # Write to file
+POWERcat . -o out.txt                    # Write to file
 pcat . | Out-File out.txt                # Pipe to file
 concat . -r -f -p                        # Stdout with fences
 ```
@@ -62,24 +62,34 @@ concat . -r -f -p                        # Stdout with fences
 ### Help
 
 ```powershell
-Get-Help Invoke-PowerCat -Full
-Get-Help Invoke-PowerCat -Examples
+Get-Help Invoke-POWERcat -Full
+Get-Help Invoke-POWERcat -Examples
 ```
+
+## 📹 Video Demos
+
+See POWERcat in action:
+
+- **[demo-help](assets/demo-help.mp4)** — Display the man-page style help with the `-h` flag
+- **[demo-stdout](assets/demo-stdout.mp4)** — Bundle files with `-Stats` and output to stdout with character and token counts
+- **[demo-txt](assets/demo-txt.mp4)** — Write bundled files to `.txt`, verify the file exists, and view output with `nano`
+- **[demo-bat](assets/demo-bat.mp4)** — Pipe bundled bash files to `bat` for shell syntax highlighting
+- **[demo-lolcat](assets/demo-lolcat.mp4)** — Pipe bundled output to `lolcat` for rainbow terminal fun
 
 ## 🧪 Examples
 
 - **Concatenate matching files to stdout (no implicit Markdown):**
 
 ```powershell
-Invoke-PowerCat "C:\Project"
+Invoke-POWERcat "C:\Project"
 # Output streams to console; pipe to capture
-Invoke-PowerCat "C:\Project" | Out-File bundle.txt
+Invoke-POWERcat "C:\Project" | Out-File bundle.txt
 ```
 
 - **Bundle for LLMs with minification, fences, and token stats:**
 
 ```powershell
-Invoke-PowerCat "C:\Project" -Recurse -Minify -Fence -PowerShell -Stats
+Invoke-POWERcat "C:\Project" -Recurse -Minify -Fence -PowerShell -Stats
 ```
 
 Output includes:
@@ -89,7 +99,7 @@ Output includes:
 - Token estimate (4 chars/token baseline):
 
 ```powershell
-=== PowerCat Statistics ===
+=== POWERcat Statistics ===
 Files processed:     15
 Total characters:    45,230
 Estimated tokens:    11,308 (4 chars/token baseline)
@@ -99,7 +109,7 @@ Estimated tokens:    11,308 (4 chars/token baseline)
 - **Write to file with JSON headers for structured parsing:**
 
 ```powershell
-Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
+Invoke-POWERcat "C:\Project" -o "C:\bundle.txt" -Recurse -HeaderFormat JSON -Lua
 ```
 
 Output includes structured headers like `{"file":"script.lua"}` for better LLM parsing.
@@ -107,13 +117,13 @@ Output includes structured headers like `{"file":"script.lua"}` for better LLM p
 - **Exclude large files to optimize for token limits:**
 
 ```powershell
-Invoke-PowerCat "C:\Project" -Recurse -MaxSize 50KB -Bash
+Invoke-POWERcat "C:\Project" -Recurse -MaxSize 50KB -Bash
 ```
 
 - **Custom extensions and sorting:**
 
 ```powershell
-Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
+Invoke-POWERcat "C:\Project" -o "C:\bundle.txt" -Extensions ".ps1",".json",".sh" -Sort Extension
 ```
 
 - **Use catignore to exclude directories:**
@@ -131,14 +141,14 @@ obj/
 Then run:
 
 ```powershell
-Invoke-PowerCat "C:\Project" -o "C:\bundle.txt" -Recurse
+Invoke-POWERcat "C:\Project" -o "C:\bundle.txt" -Recurse
 ```
 
 - **View token estimation before bundling:**
 
 ```powershell
-# Note: PowerCat no longer includes Markdown by default. Use `-IncludeMarkdown` to include `.md` files.
-Invoke-PowerCat "C:\Project" -Recurse -Minify -Stats
+# Note: POWERcat no longer includes Markdown by default. Use `-IncludeMarkdown` to include `.md` files.
+Invoke-POWERcat "C:\Project" -Recurse -Minify -Stats
 # See: Files processed, Total characters, Estimated tokens
 # Then decide: pipe to file, adjust MaxSize, or minify further
 ```
@@ -147,30 +157,30 @@ Invoke-PowerCat "C:\Project" -Recurse -Minify -Stats
 
 This repo ships both a module and a standalone script for convenience:
 
-- **Module:** `src/PowerCat/PowerCat.psm1`, `src/PowerCat/PowerCat.psd1`
-- **Script:** `scripts/PowerCat.ps1`
+- **Module:** `src/POWERcat/POWERcat.psm1`, `src/POWERcat/POWERcat.psd1`
+- **Script:** `scripts/POWERcat.ps1`
 
 Module usage:
 
 ```powershell
-Import-Module .\src\PowerCat\ -Force
-Invoke-PowerCat . -o out.txt
+Import-Module .\src\POWERcat\ -Force
+Invoke-POWERcat . -o out.txt
 ```
 
 Script usage:
 
 ```powershell
-.\scripts\PowerCat.ps1 . -o out.txt
+.\scripts\POWERcat.ps1 . -o out.txt
 ```
 
 _Note:_ If you see scripts blocked, run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` as admin or follow your org policy.
 
-## ☄️ Why PowerCat?
+## ☄️ Why POWERcat?
 
 Because recruiters, collaborators, and LLMs don't want a directory tree—they want one file, structured and readable.
-PowerCat makes your work portable, token-efficient, and a little stylish.
+POWERcat makes your work portable, token-efficient, and a little stylish.
 
-### PowerCat vs. Standard `cat`
+### POWERcat vs. Standard `cat`
 
 **Standard `cat` or `Get-Content`:**
 
@@ -180,10 +190,10 @@ Get-ChildItem -Recurse -Filter "*.ps1" | Get-Content
 # Output: No file separators, no headers, unclear which code belongs where
 ```
 
-**PowerCat:**
+**POWERcat:**
 
 ```powershell
-Invoke-PowerCat . -Recurse -Fence -PowerShell
+Invoke-POWERcat . -Recurse -Fence -PowerShell
 # Output:
 # --- File: script1.ps1 ---
 #
@@ -200,7 +210,7 @@ Invoke-PowerCat . -Recurse -Fence -PowerShell
 
 **The difference:**
 
-| Feature                | `cat` | PowerCat                                 |
+| Feature                | `cat` | POWERcat                                 |
 | ---------------------- | ----- | ---------------------------------------- |
 | Stdout output          | ✅    | ✅ (default)                             |
 | File output (optional) | ❌    | ✅                                       |
@@ -214,7 +224,7 @@ Invoke-PowerCat . -Recurse -Fence -PowerShell
 | Multiple extensions    | ❌    | ✅ (flexible file type selection)        |
 | Binary safety          | ❌    | ✅ (auto-skip executables, images, etc.) |
 
-PowerCat is purpose-built for sharing code with recruiters, collaborators, and LLMs—creating readable, structured, token-aware bundles that respect context limits.
+POWERcat is purpose-built for sharing code with recruiters, collaborators, and LLMs—creating readable, structured, token-aware bundles that respect context limits.
 
 ## 🛸 License
 
@@ -239,4 +249,4 @@ Curious about my projects? Want to collaborate or hire for entry-level IT/suppor
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-bd93f9?style=for-the-badge&logo=github&logoColor=white&labelColor=6272a4)](https://github.com/theonliestmattastic)
 [![Email](https://img.shields.io/badge/Email-matthew.poole485%40gmail.com-bd93f9?style=for-the-badge&logo=gmail&logoColor=white&labelColor=6272a4)](mailto:matthew.poole485@gmail.com)
 
-> "Sometimes the questions are complicated and the answers are simple." — Dr. Seuss
+> "Give someone a program, frustrate them for a day. Teach them to program, frustrate them for a lifetime." — Unknown

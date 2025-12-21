@@ -33,7 +33,7 @@
 
 ### Overview
 
-**PowerCat** is a single‑shot concatenator for bundling markdown and code into one clean text file.
+**POWERcat** is a single‑shot concatenator for bundling markdown and code into one clean text file.
 It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, and built with recruiter‑friendly ergonomics.
 
 ### Features
@@ -43,12 +43,12 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - **Markdown fences:** Opt‑in code fencing with `-Fence` for clean LLM/GitHub sharing.
 - **Extensions:** Default as Markdown plus switches (`-Bash`, `-PowerShell`, `-HTML`, `-CSS`) or custom list via `-Extensions`.
 - **Sorting:** Control order with `-Sort Name|Extension|LastWriteTime|Length`.
-- **Aliases:** Quick commands `PowerCat`, `pcat`, `concat` point to `Invoke-PowerCat`.
-- **Native help:** Rich comment‑based help available via `Get-Help Invoke-PowerCat`.
+- **Aliases:** Quick commands `POWERcat`, `pcat`, `concat` point to `Invoke-POWERcat`.
+- **Native help:** Rich comment‑based help available via `Get-Help Invoke-POWERcat`.
 
 ### Added
 
-- Initial release of PowerCat.
+- Initial release of POWERcat.
 
 ## Version 1.0.6 (2025-10-25)
 
@@ -98,7 +98,7 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 - **Efficiency:** Refactored file reading loop to use single `Get-ChildItem` scan instead of per-extension loops; consolidated output into string array and write once with `Set-Content`.
 - **Error handling:** Added comprehensive try-catch blocks around file I/O operations with descriptive error messages.
 - **UTF-8 encoding:** Specified UTF-8 encoding for all file reads and writes for consistent cross-platform text handling (no BOM).
-- **Module ergonomics:** Removed `-Help` switch from module (PowerShell-idiomatic); users rely on `Get-Help Invoke-PowerCat` for native PowerShell help discovery.
+- **Module ergonomics:** Removed `-Help` switch from module (PowerShell-idiomatic); users rely on `Get-Help Invoke-POWERcat` for native PowerShell help discovery.
 - **Cross-platform paths:** Added `GetUnresolvedProviderPathFromPSPath` for proper tilde (`~`) and relative path expansion on all platforms.
 
 ## Version 1.2.0 (2025-12-17)
@@ -110,9 +110,9 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 
 ### Added
 
-- **Stdout output:** Invoke-PowerCat now outputs concatenated content to stdout by default, enabling Unix-style piping and redirection.
-  - Example: `Invoke-PowerCat -s ./src | Out-File bundle.txt` (manual redirection)
-  - Example: `Invoke-PowerCat -s ./src -o bundle.txt` (direct file output, optional)
+- **Stdout output:** Invoke-POWERcat now outputs concatenated content to stdout by default, enabling Unix-style piping and redirection.
+  - Example: `Invoke-POWERcat -s ./src | Out-File bundle.txt` (manual redirection)
+  - Example: `Invoke-POWERcat -s ./src -o bundle.txt` (direct file output, optional)
 
 ### Fixed
 
@@ -123,7 +123,7 @@ It’s the feline cousin of `cat`—polished for PowerShell, Markdown‑aware, a
 
 ### Breaking Changes
 
-- **Implicit Markdown removed:** PowerCat no longer includes `.md` files by default. Users must explicitly opt-in with `-IncludeMarkdown` or `-Extensions ".md"`. This avoids accidentally bundling documentation and makes automated workflows safer.
+- **Implicit Markdown removed:** POWERcat no longer includes `.md` files by default. Users must explicitly opt-in with `-IncludeMarkdown` or `-Extensions ".md"`. This avoids accidentally bundling documentation and makes automated workflows safer.
 
 ### Added
 

@@ -208,14 +208,21 @@ function Invoke-PowerCat {
     else {
       $_
     }
-  }
-  $Extensions = $Extensions | Where-Object { $_ } | Select-Object -Unique
+  } | Where-Object { $_ } | ForEach-Object {
+    $e = $_.ToString().Trim().ToLowerInvariant()
+    if ($e -and -not $e.StartsWith('.')) { $e = ".$e" }
+    $e
+  } | Select-Object -Unique
 
   # Normalize excluded extensions and remove them
   if ($ExcludeExtensions.Count -gt 0) {
     $exclude = $ExcludeExtensions | ForEach-Object {
       if ($_ -is [string] -and $_ -like "*,*") { ($_ -split ',') | ForEach-Object { $_.Trim() } } else { $_ }
-    } | Where-Object { $_ } | Select-Object -Unique
+    } | Where-Object { $_ } | ForEach-Object {
+      $e = $_.ToString().Trim().ToLowerInvariant()
+      if ($e -and -not $e.StartsWith('.')) { $e = ".$e" }
+      $e
+    } | Select-Object -Unique
     $Extensions = $Extensions | Where-Object { $exclude -notcontains $_ }
   }
 

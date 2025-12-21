@@ -264,9 +264,14 @@ function Invoke-PowerCat {
       }
     }
     # If output file exists and ForceOverwrite specified, attempt to remove it
-    if ($OutputFile -and (Test-Path -Path $OutputFile) -and $ForceOverwrite) {
+    if ($OutputFile -and (Test-Path -LiteralPath $OutputFile) -and $ForceOverwrite) {
       try {
-        Remove-Item -Path $OutputFile -Force -ErrorAction Stop
+        $item = Get-Item -LiteralPath $OutputFile -ErrorAction Stop
+        if ($item.PSIsContainer) {
+          Write-Error "Output path '$OutputFile' is a directory; refusing to remove it with -ForceOverwrite."
+          return
+        }
+        Remove-Item -LiteralPath $OutputFile -Force -ErrorAction Stop
       }
       catch {
         Write-Error "Failed to remove existing output file '$OutputFile' even with -ForceOverwrite. Error: $_"

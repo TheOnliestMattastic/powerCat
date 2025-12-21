@@ -71,34 +71,23 @@ Get-Help Invoke-POWERcat -Examples
 See POWERcat in action:
 
 ### Display help with the `-h` flag
-<video controls style="max-width: 600px; border-radius: 8px;">
-  <source src="assets/demo-help.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+https://github.com/user-attachments/assets/880e0c08-153b-48ee-92bb-89e4641aa38a
 
 ### Bundle files with `-Stats` and output to stdout
-<video controls style="max-width: 600px; border-radius: 8px;">
-  <source src="assets/demo-stdout.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+https://github.com/user-attachments/assets/d10c5ac2-7390-4961-aee6-7657872fe7fb
 
 ### Write bundled files to `.txt` and view with `nano`
-<video controls style="max-width: 600px; border-radius: 8px;">
-  <source src="assets/demo-txt.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
 
 ### Pipe bundled bash files to `bat` for syntax highlighting
-<video controls style="max-width: 600px; border-radius: 8px;">
-  <source src="assets/demo-bat.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+https://github.com/user-attachments/assets/8d10daf4-5d73-4103-8b8d-a82c3f56bd4e
 
 ### Pipe bundled output to `lolcat` for rainbow terminal fun
-<video controls style="max-width: 600px; border-radius: 8px;">
-  <source src="assets/demo-lolcat.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+
+https://github.com/user-attachments/assets/f9b37b16-b0fe-4603-a6fa-6bc2f385f900
 
 ## 🧪 Examples
 

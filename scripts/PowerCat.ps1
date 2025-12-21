@@ -218,7 +218,12 @@ if ($IncludeMarkdown) { $Extensions += ".md" }
 
 # Parse comma-separated extensions
 $Extensions = ($Extensions -join ',') -split ',' |
-              ForEach-Object { $_.Trim() } |
+              ForEach-Object {
+                $e = $_.Trim()
+                if (-not $e) { return }
+                if ($e[0] -ne '.') { $e = ".$e" }
+                $e.ToLowerInvariant()
+              } |
               Where-Object { $_ } |
               Select-Object -Unique
 

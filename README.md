@@ -71,31 +71,31 @@ Get-Help Invoke-POWERcat -Examples
 See POWERcat in action:
 
 ### Display help with the `-h` flag
-<video width="100%" controls>
+<video controls style="max-width: 600px; border-radius: 8px;">
   <source src="assets/demo-help.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
 ### Bundle files with `-Stats` and output to stdout
-<video width="100%" controls>
+<video controls style="max-width: 600px; border-radius: 8px;">
   <source src="assets/demo-stdout.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
 ### Write bundled files to `.txt` and view with `nano`
-<video width="100%" controls>
+<video controls style="max-width: 600px; border-radius: 8px;">
   <source src="assets/demo-txt.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
 ### Pipe bundled bash files to `bat` for syntax highlighting
-<video width="100%" controls>
+<video controls style="max-width: 600px; border-radius: 8px;">
   <source src="assets/demo-bat.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
 ### Pipe bundled output to `lolcat` for rainbow terminal fun
-<video width="100%" controls>
+<video controls style="max-width: 600px; border-radius: 8px;">
   <source src="assets/demo-lolcat.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>

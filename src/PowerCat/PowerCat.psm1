@@ -381,7 +381,7 @@ function Invoke-PowerCat {
     # Output to stdout (matching Unix cat behavior)
     $OutputContent | Write-Output
   }
-    # Calculate stats if requested
+  # Calculate stats if requested
   if ($Stats) {
     $outputText = $OutputContent -join "`n"
     $charCount = $outputText.Length

@@ -66,17 +66,17 @@ Get-Help Invoke-POWERcat -Full
 Get-Help Invoke-POWERcat -Examples
 ```
 
-## 📹 Video Demos
+## Demos
 
 See POWERcat in action:
 
 ### Display help with the `-h` flag
 
-https://github.com/user-attachments/assets/880e0c08-153b-48ee-92bb-89e4641aa38a
+![Demo of POWERcat with help flat](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXBkZzl0bGExamhhZmRzeHNtbzk0ajh6M3VtNjhvcHZ4NWwyMzgyeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lvK3qtQj34pWwHch1H/giphy.gif)
 
 ### Bundle files with `-Stats` and output to stdout
 
-https://github.com/user-attachments/assets/d10c5ac2-7390-4961-aee6-7657872fe7fb
+![Demo of POWERcat with stats flag](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGxuOHBiNDVkOTU1ZGJ5bTVsZDhhODQ0bDFrZGx2N25iYmw3eWcycCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GGuPOvVAg61zc0WxE9/giphy.gif)
 
 ### Write bundled files to `.txt` and view with `nano`
 
@@ -84,11 +84,11 @@ https://github.com/user-attachments/assets/d10c5ac2-7390-4961-aee6-7657872fe7fb
 
 ### Pipe bundled bash files to `bat` for syntax highlighting
 
-https://github.com/user-attachments/assets/8d10daf4-5d73-4103-8b8d-a82c3f56bd4e
+![Demo of POWERcat piping output to `bat` with syntax highlighting](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3d5bnhhM2V1N210MmxvNDQwMzY3b3d1MW90ZHQxMTF1NDd5Y3ZmYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WUnH3gHQRTdDzrxxO8/giphy.gif)
 
 ### Pipe bundled output to `lolcat` for rainbow terminal fun
 
-https://github.com/user-attachments/assets/f9b37b16-b0fe-4603-a6fa-6bc2f385f900
+![Demo of POWERcat piping output to `lolcat`](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ4NmJxd2cxbWxyeTNodGFuN3Nyb2hrbzRrdjVqYWpmOW51bXFveSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ULnasHsrwyqu2SxYVy/giphy.gif)
 
 ## 🧪 Examples
 

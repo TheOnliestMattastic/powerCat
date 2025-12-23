@@ -80,7 +80,7 @@ https://github.com/user-attachments/assets/d10c5ac2-7390-4961-aee6-7657872fe7fb
 
 ### Write bundled files to `.txt` and view with `nano`
 
-https://github.com/user-attachments/assets/f69b41ac-2ec8-4529-8c5c-3b99914dedab
+![Demo of POWERcat budling files and varifying with `nano`](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3B1dmluaDFkbTl3YWNueDA4am93Ym5vcGY3bjZpdXd3bGV1M3htbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BeM9Uxe31ol7EzIQ8L/giphy.gif)
 
 ### Pipe bundled bash files to `bat` for syntax highlighting
 

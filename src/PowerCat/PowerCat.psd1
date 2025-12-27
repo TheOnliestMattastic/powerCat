@@ -47,7 +47,7 @@
             Tags = @('Concatenate','Utility','Markdown','DevTools','PowerShell','CodeBundler','Textfile','Documentation','LLM','TokenCounter','AIContext')
 
             # A URL to the license for this module
-            LicenseUri = 'https://www.gnu.org/licenses/gpl-3.0'
+            LicenseUri = 'https://opensource.org/licenses/MIT'
 
             # A URL to the main website for this project
             ProjectUri = 'https://github.com/TheOnliestMattastic/POWERcat'
